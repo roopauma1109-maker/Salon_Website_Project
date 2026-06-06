@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Book Appointment</title>
+
+    <link rel="stylesheet" href="../style.css">
+
+</head>
+
+<body class="page-background">
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        JS Beauty Parlour & Academy
+    </div>
+
+    <!-- MOBILE MENU BUTTON -->
+    <button class="menu-toggle"
+            onclick="toggleMenu()">
+        ☰
+    </button>
+
+    <ul id="navMenu" class="nav-menu">
+
+        <li><a href="../index.html">Home</a></li>
+
+        <li><a href="services.html">Services</a></li>
+
+        <li><a href="gallery.html">Gallery</a></li>
+
+        <li><a href="offers.html">Offers</a></li>
+
+        <li><a href="reviews.html">Reviews</a></li>
+
+        <li><a href="booking.html">Book</a></li>
+
+        <li><a href="contact.html">Contact</a></li>
+
+    </ul>
+
+</nav>
+
+<!-- ================= BOOKING ================= -->
+
+<div class="booking-container">
+
+    <h1>Book Your Appointment</h1>
+
+    <p class="booking-subtitle">
+        Schedule your beauty session with
+        JS Beauty Parlour & Academy
+    </p>
+
+    <form id="bookingForm"
+          class="booking-form">
+
+        <input type="text"
+               id="name"
+               placeholder="Full Name"
+               required>
+
+        <input type="tel"
+               id="phone"
+               placeholder="Phone Number"
+               required>
+
+        <input type="email"
+               id="email"
+               placeholder="Email Address">
+
+        <select id="service" required>
+
+            <option value="">
+                Select Service
+            </option>
+
+            <option>Bridal Makeup</option>
+
+            <option>Hair Styling</option>
+
+            <option>Facial</option>
+
+            <option>Hair Spa</option>
+
+            <option>Mehendi</option>
+
+        </select>
+
+        <input type="date"
+               id="date"
+               required>
+
+        <input type="time"
+               id="time"
+               required>
+
+        <textarea id="message"
+                  placeholder="Additional Message">
+        </textarea>
+
+        <button type="submit">
+            Book Appointment
+        </button>
+
+    </form>
+
+</div>
+
+<!-- ================= SUCCESS POPUP ================= -->
+
+<div id="successPopup"
+     class="success-popup">
+
+    <div class="popup-icon">
+        ✓
+    </div>
+
+    <h2>Appointment Booked!</h2>
+
+    <p>
+        Thank you for choosing
+        JS Beauty Parlour & Academy.
+    </p>
+
+</div>
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+function toggleMenu() {
+
+    document
+    .getElementById("navMenu")
+    .classList
+    .toggle("show");
+
+}
+
+function showSuccessPopup() {
+
+    const popup =
+    document.getElementById("successPopup");
+
+    popup.classList.add("show");
+
+    setTimeout(() => {
+
+        popup.classList.remove("show");
+
+    }, 3000);
+
+}
+
+document
+.getElementById("bookingForm")
+
+.addEventListener("submit",
+
+async function (e) {
+
+    e.preventDefault();
+
+    const booking = {
+
+        name:
+        document.getElementById("name").value,
+
+        phone:
+        document.getElementById("phone").value,
+
+        service:
+        document.getElementById("service").value,
+
+        date:
+        document.getElementById("date").value,
+
+        time:
+        document.getElementById("time").value
+
+    };
+
+    try {
+
+        const response =
+        await fetch(
+
+            "http://127.0.0.1:8000/book",
+
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify(booking)
+            }
+
+        );
+
+        if (response.ok) {
+
+            showSuccessPopup();
+
+            document
+            .getElementById("bookingForm")
+            .reset();
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

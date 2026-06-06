@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Gallery</title>
+
+<link rel="stylesheet" href="../style.css">
+
+</head>
+
+<body class="page-background">
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        JS Beauty Parlour & Academy
+    </div>
+
+    <!-- MOBILE MENU BUTTON -->
+    <button class="menu-toggle"
+            onclick="toggleMenu()">
+        ☰
+    </button>
+
+    <ul id="navMenu" class="nav-menu">
+
+        <li><a href="../index.html">Home</a></li>
+
+        <li><a href="services.html">Services</a></li>
+
+        <li><a href="gallery.html">Gallery</a></li>
+
+        <li><a href="offers.html">Offers</a></li>
+
+        <li><a href="reviews.html">Reviews</a></li>
+
+        <li><a href="booking.html">Book</a></li>
+
+        <li><a href="contact.html">Contact</a></li>
+
+    </ul>
+
+</nav>
+
+<!-- ================= GALLERY ================= -->
+
+<section class="gallery-section">
+
+    <h1 class="gallery-title">
+        Our Work
+    </h1>
+
+    <div class="gallery">
+
+        <img src="../images/gallery1.png">
+
+        <img src="../images/gallery2.png">
+
+        <img src="../images/gallery3.png">
+
+        <img src="../images/gallery4.png">
+
+        <img src="../images/gallery5.png">
+
+        <img src="../images/gallery6.png">
+
+        <img src="../images/gallery7.png">
+
+    </div>
+
+</section>
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+function toggleMenu() {
+
+    document
+    .getElementById("navMenu")
+    .classList
+    .toggle("show");
+
+}
+
+</script>
+
+</body>
+</html>

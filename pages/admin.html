@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salon Admin Dashboard</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<style>
+.admin-container{
+    width:90%;
+    max-width:1200px;
+    margin:40px auto;
+}
+
+.admin-title{
+    text-align:center;
+    color:#4A2C2A;
+    margin-bottom:10px;
+}
+
+/* ================= STATS ================= */
+.stats-row{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin:20px 0;
+}
+
+.stat-box{
+    flex:1;
+    min-width:200px;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.stat-box h2{
+    font-size:28px;
+    margin:0;
+    font-weight:600;
+}
+
+.stat-box p{
+    margin-top:8px;
+}
+
+/* COLORS */
+.stat-box.total{ background:#fde2e4; }
+.stat-box.pending{ background:#1d1d1c; }
+.stat-box.done{ background:#d7f5dd; }
+
+/* ================= FILTER ================= */
+.filter-bar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:15px 0;
+    padding:15px;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.filter-bar input{
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    min-width:160px;
+}
+
+.filter-bar button{
+    padding:10px 14px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#4A2C2A;
+    color:white;
+}
+
+/* ================= TABLE ================= */
+.table-wrapper{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#D4A373;
+    color:white;
+    padding:10px;
+}
+
+td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #eee;
+}
+
+/* BUTTONS */
+button{
+    background:red;
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* WHATSAPP */
+.whatsapp-btn{
+    background:#25D366 !important;
+    color:white !important;
+    padding:6px 10px;
+    border-radius:6px;
+    text-decoration:none;
+    display:inline-block;
+}
+
+/* STATUS BUTTON */
+.status-btn{
+    padding:6px 10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    color:white;
+}
+
+.status-Pending{ background:#f39c12; }
+.status-Done{ background:#2ecc71; }
+</style>
+
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">JS Beauty Parlour & Academy</div>
+</nav>
+
+<div class="admin-container">
+
+<h1 class="admin-title">Salon Admin Dashboard</h1>
+
+<!-- STATS -->
+<div class="stats-row">
+
+    <div class="stat-box total">
+        <h2 id="totalBookings">0</h2>
+        <p>Total</p>
+    </div>
+
+    <div class="stat-box pending">
+        <h2 id="pendingCount">0</h2>
+        <p>Pending</p>
+    </div>
+
+    <div class="stat-box done">
+        <h2 id="doneCount">0</h2>
+        <p>Completed</p>
+    </div>
+
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar">
+    <input type="text" id="filterName" placeholder="Search Name">
+    <input type="text" id="filterService" placeholder="Service">
+    <input type="date" id="filterDate">
+
+    <button onclick="applyFilters()">Apply</button>
+    <button onclick="resetFilters()">Reset</button>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrapper">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Phone</th>
+<th>Service</th>
+<th>Date</th>
+<th>Time</th>
+<th>WhatsApp</th>
+<th>Action</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="appointmentTable"></tbody>
+</table>
+</div>
+
+</div>
+
+<script src="../script.js"></script>
+<script>
+window.addEventListener("DOMContentLoaded", loadAppointments);
+</script>
+
+</body>
+</html>

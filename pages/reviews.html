@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Reviews</title>
+
+<link rel="stylesheet"
+href="../style.css">
+
+</head>
+
+<body class="page-background">
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        JS Beauty Parlour & Academy
+    </div>
+
+    <!-- MOBILE MENU BUTTON -->
+    <button class="menu-toggle"
+            onclick="toggleMenu()">
+        ☰
+    </button>
+
+    <ul id="navMenu" class="nav-menu">
+
+        <li><a href="../index.html">Home</a></li>
+
+        <li><a href="services.html">Services</a></li>
+
+        <li><a href="gallery.html">Gallery</a></li>
+
+        <li><a href="offers.html">Offers</a></li>
+
+        <li><a href="reviews.html">Reviews</a></li>
+
+        <li><a href="booking.html">Book</a></li>
+
+        <li><a href="contact.html">Contact</a></li>
+
+    </ul>
+
+</nav>
+
+<!-- ================= REVIEWS ================= -->
+
+<section class="reviews-section">
+
+    <h1 class="reviews-title">
+        Customer Reviews
+    </h1>
+
+    <div class="service-container">
+
+        <div class="card">
+
+            <h2>★★★★★</h2>
+
+            <p>
+                Excellent bridal makeup service.
+            </p>
+
+            <b>Priya</b>
+
+        </div>
+
+        <div class="card">
+
+            <h2>★★★★★</h2>
+
+            <p>
+                Very professional and friendly staff.
+            </p>
+
+            <b>Divya</b>
+
+        </div>
+
+        <div class="card">
+
+            <h2>★★★★★</h2>
+
+            <p>
+                Best beauty academy experience.
+            </p>
+
+            <b>Kavya</b>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+
+function toggleMenu() {
+
+    document
+    .getElementById("navMenu")
+    .classList
+    .toggle("show");
+
+}
+
+</script>
+
+</body>
+</html>
