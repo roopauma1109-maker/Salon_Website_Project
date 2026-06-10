@@ -9,7 +9,7 @@ async function loadAppointments() {
 
     try {
 
-        const res = await fetch("http://127.0.0.1:8000/appointments");
+        const res = await fetch("https://salon-website-project.onrender.com/appointments");
 
         if (!res.ok) {
             console.error("API error");
@@ -196,7 +196,7 @@ window.toggleStatus = async function (id) {
     try {
 
         const res = await fetch(
-            `http://127.0.0.1:8000/appointment/${id}/toggle-status`,
+            `https://salon-website-project.onrender.com/appointment/${id}/toggle-status`,
             { method: "PUT" }
         );
 
@@ -249,7 +249,7 @@ window.deleteAppointment = async function (id) {
     try {
 
         const res = await fetch(
-            `http://127.0.0.1:8000/appointment/${id}`,
+            `https://salon-website-project.onrender.com/appointment/${id}`,
             { method: "DELETE" }
         );
 
