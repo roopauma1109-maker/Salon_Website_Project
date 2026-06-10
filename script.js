@@ -1,5 +1,7 @@
 console.log("ADMIN JS LOADED");
 
+const API_BASE = "https://salon-website-project.onrender.com";
+
 let ALL_APPOINTMENTS = [];
 
 // ===========================
@@ -9,7 +11,7 @@ async function loadAppointments() {
 
     try {
 
-        const res = await fetch("https://salon-website-project.onrender.com/appointments");
+        const res = await fetch(`${API_BASE}/appointments`);
 
         if (!res.ok) {
             console.error("API error");
@@ -24,9 +26,7 @@ async function loadAppointments() {
         renderTable(data);
 
     } catch (err) {
-
         console.error("Load error:", err);
-
     }
 }
 
@@ -34,39 +34,15 @@ async function loadAppointments() {
 // MOBILE MENU
 // ===========================
 function toggleMenu() {
-
-    document
-        .getElementById("navMenu")
-        .classList
-        .toggle("show");
-
+    document.getElementById("navMenu").classList.toggle("show");
 }
 
 // ===========================
-// SUCCESS POPUP (BOOKING)
-// ===========================
-function showSuccessPopup() {
-
-    const popup = document.getElementById("successPopup");
-
-    popup.classList.add("show");
-
-    if (popup.hideTimer) {
-        clearTimeout(popup.hideTimer);
-    }
-
-    popup.hideTimer = setTimeout(() => {
-        popup.classList.remove("show");
-    }, 10000);
-}
-
-// ===========================
-// GENERIC POPUP (USED IN ADMIN)
+// POPUP
 // ===========================
 function showPopup(message) {
 
     const popup = document.getElementById("successPopup");
-
     if (!popup) return;
 
     const title = popup.querySelector("h2");
@@ -77,9 +53,7 @@ function showPopup(message) {
 
     popup.classList.add("show");
 
-    if (popup.hideTimer) {
-        clearTimeout(popup.hideTimer);
-    }
+    if (popup.hideTimer) clearTimeout(popup.hideTimer);
 
     popup.hideTimer = setTimeout(() => {
         popup.classList.remove("show");
@@ -91,13 +65,15 @@ function showPopup(message) {
 // ===========================
 function updateCounters(data) {
 
+    const safe = (s) => (s ?? "Pending");
+
     document.getElementById("totalBookings").innerText = data.length;
 
     document.getElementById("pendingCount").innerText =
-        data.filter(a => (a.status || "Pending") === "Pending").length;
+        data.filter(a => safe(a.status) === "Pending").length;
 
     document.getElementById("doneCount").innerText =
-        data.filter(a => a.status === "Done").length;
+        data.filter(a => safe(a.status) === "Done").length;
 }
 
 // ===========================
@@ -106,26 +82,20 @@ function updateCounters(data) {
 function renderTable(data) {
 
     const table = document.getElementById("appointmentTable");
-
     if (!table) return;
 
     table.innerHTML = data.map(item => {
 
-        const status = item.status || "Pending";
+        const status = (item.status ?? "Pending");
 
         return `
         <tr>
 
             <td>${item.id}</td>
-
             <td>${item.name}</td>
-
             <td>${item.phone}</td>
-
             <td>${item.service}</td>
-
             <td>${item.date}</td>
-
             <td>${item.time}</td>
 
             <!-- WHATSAPP -->
@@ -137,16 +107,13 @@ function renderTable(data) {
 
 Dear ${item.name},
 
-Your appointment has been successfully scheduled at JS Beauty Parlour & Academy.
+Your appointment has been scheduled at JS Beauty Parlour & Academy.
 
-Service Details:
 Service : ${item.service}
 Date    : ${item.date}
 Time    : ${item.time}
 
-Please arrive 10 minutes early for smooth service.
-
-We look forward to serving you.
+Please arrive 10 minutes early.
 
 Regards,
 JS Beauty Parlour & Academy`
@@ -188,15 +155,12 @@ JS Beauty Parlour & Academy`
 window.toggleStatus = async function (id) {
 
     const item = ALL_APPOINTMENTS.find(a => a.id === id);
-
     if (!item) return;
-
-    const wasPending = (item.status || "Pending") === "Pending";
 
     try {
 
         const res = await fetch(
-            `https://salon-website-project.onrender.com/appointment/${id}/toggle-status`,
+            `${API_BASE}/appointment/${id}/toggle-status`,
             { method: "PUT" }
         );
 
@@ -211,29 +175,9 @@ window.toggleStatus = async function (id) {
 
         showPopup(`Appointment for ${item.name} marked as ${updated.status}`);
 
-        if (wasPending && updated.status === "Done") {
-
-            const msg =
-`APPOINTMENT COMPLETED
-
-Dear ${item.name},
-
-We are pleased to inform you that your appointment has been successfully completed at JS Beauty Parlour & Academy.
-
-Service Summary:
-Service : ${item.service}
-Date    : ${item.date}
-Time    : ${item.time}
-
-We hope you had a great experience.
-
-Thank you for choosing JS Beauty Parlour & Academy.`;
-
-            const phone = item.phone.replace(/\D/g, "");
-
-            const url = `https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`;
-
-            window.open(url, "_blank", "noopener,noreferrer");
+        // If backend sends WhatsApp link
+        if (updated.whatsapp) {
+            window.open(updated.whatsapp, "_blank", "noopener,noreferrer");
         }
 
     } catch (err) {
@@ -249,20 +193,17 @@ window.deleteAppointment = async function (id) {
     try {
 
         const res = await fetch(
-            `https://salon-website-project.onrender.com/appointment/${id}`,
+            `${API_BASE}/appointment/${id}`,
             { method: "DELETE" }
         );
 
         if (!res.ok) return;
 
-        loadAppointments();
-
+        await loadAppointments();
         showPopup("Appointment deleted successfully");
 
     } catch (err) {
-
         console.error(err);
-
     }
 };
 
@@ -271,14 +212,9 @@ window.deleteAppointment = async function (id) {
 // ===========================
 window.applyFilters = function () {
 
-    const name =
-        document.getElementById("filterName")?.value.toLowerCase() || "";
-
-    const service =
-        document.getElementById("filterService")?.value.toLowerCase() || "";
-
-    const date =
-        document.getElementById("filterDate")?.value || "";
+    const name = document.getElementById("filterName")?.value.toLowerCase() || "";
+    const service = document.getElementById("filterService")?.value.toLowerCase() || "";
+    const date = document.getElementById("filterDate")?.value || "";
 
     const filtered = ALL_APPOINTMENTS.filter(item =>
         item.name.toLowerCase().includes(name) &&
