@@ -1,3 +1,2 @@
-backend/
 *.db
 __pycache__/
