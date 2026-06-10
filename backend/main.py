@@ -9,11 +9,11 @@ from models import Base, Appointment
 app = FastAPI()
 
 # ========================
-# CORS
+# CORS (IMPORTANT)
 # ========================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # change to your Netlify URL in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -45,6 +45,7 @@ class Booking(BaseModel):
 def home():
     return {"message": "API Running"}
 
+
 # ========================
 # LOGIN
 # ========================
@@ -55,8 +56,9 @@ def login(username: str = Form(...), password: str = Form(...)):
 
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
+
 # ========================
-# BOOK APPOINTMENT (CONFIRMATION MESSAGE)
+# BOOK APPOINTMENT
 # ========================
 @app.post("/book")
 def book(data: Booking):
@@ -69,30 +71,28 @@ def book(data: Booking):
         db.commit()
         db.refresh(appointment)
 
-        # CLEAN PHONE
         phone = ''.join(filter(str.isdigit, appointment.phone))
 
-        # CONFIRMATION MESSAGE (NO EMOJIS)
         message = (
             "APPOINTMENT CONFIRMED\n\n"
             f"Name: {appointment.name}\n"
             f"Service: {appointment.service}\n"
             f"Date: {appointment.date}\n"
             f"Time: {appointment.time}\n\n"
-            "Your appointment has been successfully booked at JS Beauty Parlour & Academy.\n"
-            "Please arrive on time.\n\n"
-            "Thank you for choosing our service."
+            "Booked at JS Beauty Parlour & Academy.\n"
+            "Please arrive on time."
         )
 
         whatsapp_url = f"https://wa.me/91{phone}?text={quote(message)}"
 
         return {
-            "message": "Saved",
+            "message": "Booking saved successfully",
             "whatsapp": whatsapp_url
         }
 
     finally:
         db.close()
+
 
 # ========================
 # GET APPOINTMENTS
@@ -115,12 +115,12 @@ def get_appointments():
             }
             for a in data
         ]
-
     finally:
         db.close()
 
+
 # ========================
-# DELETE APPOINTMENT
+# DELETE
 # ========================
 @app.delete("/appointment/{id}")
 def delete_appointment(id: int):
@@ -135,12 +135,12 @@ def delete_appointment(id: int):
         db.commit()
 
         return {"message": "Deleted"}
-
     finally:
         db.close()
 
+
 # ========================
-# TOGGLE STATUS + COMPLETION WHATSAPP
+# TOGGLE STATUS
 # ========================
 @app.put("/appointment/{id}/toggle-status")
 def toggle_status(id: int):
@@ -151,42 +151,19 @@ def toggle_status(id: int):
         if not item:
             raise HTTPException(status_code=404, detail="Not found")
 
-        was_pending = item.status == "Pending"
-
-        # TOGGLE
         item.status = "Done" if item.status == "Pending" else "Pending"
 
         db.commit()
         db.refresh(item)
 
-        whatsapp_url = None
-
-        # ONLY ON Pending → Done
-        if was_pending and item.status == "Done":
-
-            phone = ''.join(filter(str.isdigit, item.phone))
-
-            message = (
-                "APPOINTMENT COMPLETED\n\n"
-                f"Name: {item.name}\n"
-                f"Service: {item.service}\n"
-                f"Date: {item.date}\n"
-                f"Time: {item.time}\n\n"
-                "Your appointment has been completed at JS Beauty Parlour & Academy.\n"
-                "Thank you for visiting us.\n"
-                "Please visit again."
-            )
-
-            whatsapp_url = f"https://wa.me/91{phone}?text={quote(message)}"
-
         return {
             "message": "Status updated",
-            "status": item.status,
-            "whatsapp": whatsapp_url
+            "status": item.status
         }
 
     finally:
         db.close()
+
 
 # ========================
 # STATS
@@ -202,6 +179,5 @@ def get_stats():
             "pending": len([a for a in all_items if a.status == "Pending"]),
             "done": len([a for a in all_items if a.status == "Done"])
         }
-
     finally:
         db.close()
