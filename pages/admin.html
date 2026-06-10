@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="../style.css">
 
 <style>
+
 .admin-container{
     width:90%;
     max-width:1200px;
@@ -21,6 +22,7 @@
 }
 
 /* ================= STATS ================= */
+
 .stats-row{
     display:flex;
     gap:15px;
@@ -45,14 +47,28 @@
 
 .stat-box p{
     margin-top:8px;
+    font-size:18px;
 }
 
-/* COLORS */
-.stat-box.total{ background:#fde2e4; }
-.stat-box.pending{ background:#1d1d1c; }
-.stat-box.done{ background:#d7f5dd; }
+/* ================= COLORS ================= */
+
+.stat-box.total{
+    background:#fde2e4;
+    color:#4A2C2A;
+}
+
+.stat-box.pending{
+    background:#e6c7a8;
+    color:#4A2C2A;
+}
+
+.stat-box.done{
+    background:#d7f5dd;
+    color:#4A2C2A;
+}
 
 /* ================= FILTER ================= */
+
 .filter-bar{
     display:flex;
     gap:10px;
@@ -78,9 +94,15 @@
     cursor:pointer;
     background:#4A2C2A;
     color:white;
+    transition:0.3s;
+}
+
+.filter-bar button:hover{
+    background:#6b3f3b;
 }
 
 /* ================= TABLE ================= */
+
 .table-wrapper{
     background:white;
     padding:20px;
@@ -97,16 +119,17 @@ table{
 th{
     background:#D4A373;
     color:white;
-    padding:10px;
+    padding:12px;
 }
 
 td{
-    padding:10px;
+    padding:12px;
     text-align:center;
     border-bottom:1px solid #eee;
 }
 
-/* BUTTONS */
+/* ================= BUTTONS ================= */
+
 button{
     background:red;
     color:white;
@@ -116,7 +139,8 @@ button{
     cursor:pointer;
 }
 
-/* WHATSAPP */
+/* ================= WHATSAPP ================= */
+
 .whatsapp-btn{
     background:#25D366 !important;
     color:white !important;
@@ -126,7 +150,8 @@ button{
     display:inline-block;
 }
 
-/* STATUS BUTTON */
+/* ================= STATUS BUTTON ================= */
+
 .status-btn{
     padding:6px 10px;
     border:none;
@@ -135,8 +160,14 @@ button{
     color:white;
 }
 
-.status-Pending{ background:#f39c12; }
-.status-Done{ background:#2ecc71; }
+.status-Pending{
+    background:#d4a373;
+}
+
+.status-Done{
+    background:#2ecc71;
+}
+
 </style>
 
 </head>
@@ -151,7 +182,8 @@ button{
 
 <h1 class="admin-title">Salon Admin Dashboard</h1>
 
-<!-- STATS -->
+<!-- ================= STATS ================= -->
+
 <div class="stats-row">
 
     <div class="stat-box total">
@@ -171,40 +203,52 @@ button{
 
 </div>
 
-<!-- FILTER -->
+<!-- ================= FILTER ================= -->
+
 <div class="filter-bar">
+
     <input type="text" id="filterName" placeholder="Search Name">
+
     <input type="text" id="filterService" placeholder="Service">
+
     <input type="date" id="filterDate">
 
     <button onclick="applyFilters()">Apply</button>
+
     <button onclick="resetFilters()">Reset</button>
+
 </div>
 
-<!-- TABLE -->
+<!-- ================= TABLE ================= -->
+
 <div class="table-wrapper">
+
 <table>
+
 <thead>
 <tr>
-<th>ID</th>
-<th>Name</th>
-<th>Phone</th>
-<th>Service</th>
-<th>Date</th>
-<th>Time</th>
-<th>WhatsApp</th>
-<th>Action</th>
-<th>Status</th>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Phone</th>
+    <th>Service</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>WhatsApp</th>
+    <th>Action</th>
+    <th>Status</th>
 </tr>
 </thead>
 
 <tbody id="appointmentTable"></tbody>
+
 </table>
+
 </div>
 
 </div>
 
 <script src="../script.js"></script>
+
 <script>
 window.addEventListener("DOMContentLoaded", loadAppointments);
 </script>
