@@ -1,19 +1,16 @@
-from fastapi import FastAPI, Form, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from urllib.parse import quote
 
 from database import SessionLocal, engine
 from models import Base, Appointment
 
 app = FastAPI()
 
-# ========================
-# CORS (IMPORTANT)
-# ========================
+# CORS (dev only)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # change to your Netlify URL in production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,15 +18,10 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
-# ========================
-# ADMIN LOGIN
-# ========================
 ADMIN_USER = "sister"
 ADMIN_PASS = "1234"
 
-# ========================
-# MODEL
-# ========================
+
 class Booking(BaseModel):
     name: str
     phone: str
@@ -38,28 +30,19 @@ class Booking(BaseModel):
     time: str
 
 
-# ========================
-# HOME
-# ========================
 @app.get("/")
 def home():
     return {"message": "API Running"}
 
 
-# ========================
-# LOGIN
-# ========================
 @app.post("/login")
-def login(username: str = Form(...), password: str = Form(...)):
-    if username == ADMIN_USER and password == ADMIN_PASS:
+def login(data: dict):
+    if data["username"] == ADMIN_USER and data["password"] == ADMIN_PASS:
         return {"role": "admin"}
 
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
-# ========================
-# BOOK APPOINTMENT
-# ========================
 @app.post("/book")
 def book(data: Booking):
     db = SessionLocal()
@@ -71,32 +54,14 @@ def book(data: Booking):
         db.commit()
         db.refresh(appointment)
 
-        phone = ''.join(filter(str.isdigit, appointment.phone))
-
-        message = (
-            "APPOINTMENT CONFIRMED\n\n"
-            f"Name: {appointment.name}\n"
-            f"Service: {appointment.service}\n"
-            f"Date: {appointment.date}\n"
-            f"Time: {appointment.time}\n\n"
-            "Booked at JS Beauty Parlour & Academy.\n"
-            "Please arrive on time."
-        )
-
-        whatsapp_url = f"https://wa.me/91{phone}?text={quote(message)}"
-
         return {
-            "message": "Booking saved successfully",
-            "whatsapp": whatsapp_url
+            "message": "Appointment booked successfully",
+            "appointment_id": appointment.id
         }
-
     finally:
         db.close()
 
 
-# ========================
-# GET APPOINTMENTS
-# ========================
 @app.get("/appointments")
 def get_appointments():
     db = SessionLocal()
@@ -119,9 +84,6 @@ def get_appointments():
         db.close()
 
 
-# ========================
-# DELETE
-# ========================
 @app.delete("/appointment/{id}")
 def delete_appointment(id: int):
     db = SessionLocal()
@@ -139,9 +101,6 @@ def delete_appointment(id: int):
         db.close()
 
 
-# ========================
-# TOGGLE STATUS
-# ========================
 @app.put("/appointment/{id}/toggle-status")
 def toggle_status(id: int):
     db = SessionLocal()
@@ -156,18 +115,11 @@ def toggle_status(id: int):
         db.commit()
         db.refresh(item)
 
-        return {
-            "message": "Status updated",
-            "status": item.status
-        }
-
+        return {"message": "Status updated", "status": item.status}
     finally:
         db.close()
 
 
-# ========================
-# STATS
-# ========================
 @app.get("/appointments/stats")
 def get_stats():
     db = SessionLocal()
@@ -176,8 +128,8 @@ def get_stats():
 
         return {
             "total": len(all_items),
-            "pending": len([a for a in all_items if a.status == "Pending"]),
-            "done": len([a for a in all_items if a.status == "Done"])
+            "pending": sum(1 for a in all_items if a.status == "Pending"),
+            "done": sum(1 for a in all_items if a.status == "Done")
         }
     finally:
         db.close()
