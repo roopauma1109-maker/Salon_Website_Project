@@ -1,121 +1,175 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviews — JS Beauty Parlour & Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#0A0A0A;--black-2:#111111;--black-3:#1A1A1A;--black-4:#242424;--rg:#E8A87C;--rg-light:#F5CBA7;--rg-deep:#C07840;--rg-muted:rgba(232,168,124,0.10);--rg-border:rgba(232,168,124,0.25);--white:#FFFFFF;--w70:rgba(255,255,255,0.70);--w40:rgba(255,255,255,0.40);--w15:rgba(255,255,255,0.08);--border:rgba(232,168,124,0.20);}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--w15);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+  .logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);text-decoration:none;}
+  .logo span{color:var(--rg);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1rem;line-height:64px;font-size:.78rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--w70);text-decoration:none;transition:color .2s;white-space:nowrap;}
+  .nav-links a:hover,.nav-links a.active{color:var(--rg);}
+  .nav-cta{background:var(--rg)!important;color:var(--black)!important;border-radius:4px;padding:0 1.2rem!important;height:36px;margin-top:14px;line-height:36px!important;font-size:.75rem!important;font-weight:600!important;letter-spacing:.1em!important;}
+  .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;}
+  .hamburger span{display:block;width:22px;height:1.5px;background:var(--white);margin:5px 0;}
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+  /* HERO STRIP */
+  .reviews-hero{
+    background:var(--black-2);border-bottom:1px solid var(--border);
+    padding:4.5rem 2rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .reviews-hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 100%,rgba(232,168,124,0.07) 0%,transparent 65%);}
+  .avg-score{font-family:'Playfair Display',serif;font-size:5.5rem;font-weight:700;color:var(--rg);line-height:1;position:relative;}
+  .avg-stars{font-size:1.5rem;color:var(--rg);letter-spacing:4px;margin:.5rem 0;opacity:.85;}
+  .avg-count{font-size:.85rem;color:var(--w40);}
 
-<title>Reviews</title>
+  .section{padding:5rem 2rem;}
+  .sec-inner{max-width:1200px;margin:0 auto;}
 
-<link rel="stylesheet"
-href="../style.css">
+  /* LAYOUT */
+  .reviews-layout{display:grid;grid-template-columns:1fr 320px;gap:3rem;margin-bottom:4rem;align-items:start;}
+  .rb-card{background:var(--black-3);border:1px solid var(--w15);border-radius:14px;padding:2rem;position:sticky;top:84px;}
+  .rb-title{font-size:.75rem;font-weight:600;color:var(--w70);text-transform:uppercase;letter-spacing:.12em;margin-bottom:1.2rem;}
+  .rb-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .rb-lbl{font-size:.78rem;color:var(--w40);width:36px;}
+  .rb-wrap{flex:1;height:5px;background:var(--black-4);border-radius:3px;overflow:hidden;}
+  .rb-bar{height:100%;background:var(--rg);border-radius:3px;opacity:.7;}
+  .rb-count{font-size:.72rem;color:var(--w40);width:24px;text-align:right;}
 
+  /* GRID */
+  .reviews-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
+  .r-card{background:var(--black-3);border:1px solid var(--w15);border-radius:12px;padding:1.8rem;transition:all .2s;}
+  .r-card:hover{border-color:var(--border);box-shadow:0 8px 32px rgba(0,0,0,0.4);}
+  .r-stars{color:var(--rg);font-size:.82rem;letter-spacing:2px;margin-bottom:1rem;}
+  .r-text{font-size:.88rem;color:var(--w70);line-height:1.78;font-style:italic;margin-bottom:1.2rem;}
+  .r-author{display:flex;align-items:center;gap:10px;}
+  .r-avatar{width:36px;height:36px;border-radius:50%;background:var(--rg-muted);border:1px solid var(--border);color:var(--rg);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;}
+  .r-name{font-size:.82rem;font-weight:600;color:var(--white);}
+  .r-service{font-size:.7rem;color:var(--w40);}
+
+  .share-cta{text-align:center;margin-top:3rem;}
+  .share-cta p{font-size:.84rem;color:var(--w40);margin-bottom:1rem;}
+  .btn-primary{background:var(--rg);color:var(--black);padding:.85rem 2rem;border-radius:4px;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;}
+  .btn-primary:hover{background:var(--rg-light);}
+
+  footer{background:var(--black-2);border-top:1px solid var(--w15);padding:2rem;text-align:center;font-size:.78rem;color:var(--w40);}
+  footer a{color:var(--rg);text-decoration:none;}
+  .wa-float{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;width:52px;height:52px;border-radius:50%;background:#25D366;color:white;font-size:1.5rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 4px 24px rgba(37,211,102,0.4);transition:transform .2s;}
+  .wa-float:hover{transform:scale(1.1);}
+
+  @media(max-width:900px){.reviews-layout{grid-template-columns:1fr;}.rb-card{position:static;}.reviews-grid{grid-template-columns:1fr;}}
+  @media(max-width:768px){
+    .nav-links{display:none;}.hamburger{display:block;}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--black-2);border-bottom:1px solid var(--w15);z-index:99;padding:1rem 0;}
+    .nav-links.open a{line-height:48px;padding:0 2rem;}
+    .nav-links.open .nav-cta{margin:0 2rem;height:44px;line-height:44px!important;}
+  }
+</style>
 </head>
+<body>
 
-<body class="page-background">
-
-<!-- ================= NAVBAR ================= -->
-
-<nav class="navbar">
-
-    <div class="logo">
-        JS Beauty Parlour & Academy
-    </div>
-
-    <!-- MOBILE MENU BUTTON -->
-    <button class="menu-toggle"
-            onclick="toggleMenu()">
-        ☰
-    </button>
-
-    <ul id="navMenu" class="nav-menu">
-
-        <li><a href="../index.html">Home</a></li>
-
-        <li><a href="services.html">Services</a></li>
-
-        <li><a href="gallery.html">Gallery</a></li>
-
-        <li><a href="offers.html">Offers</a></li>
-
-        <li><a href="reviews.html">Reviews</a></li>
-
-        <li><a href="booking.html">Book</a></li>
-
-        <li><a href="contact.html">Contact</a></li>
-
-    </ul>
-
+<nav>
+  <a class="logo" href="index.html">JS <span>Beauty</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="offers.html">Offers</a></li>
+    <li><a href="reviews.html" class="active">Reviews</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="booking.html" class="nav-cta">Book Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- ================= REVIEWS ================= -->
+<div class="reviews-hero">
+  <div class="avg-score">4.9</div>
+  <div class="avg-stars">★★★★★</div>
+  <div class="avg-count">Based on 50+ verified client reviews</div>
+</div>
 
-<section class="reviews-section">
-
-    <h1 class="reviews-title">
-        Customer Reviews
-    </h1>
-
-    <div class="service-container">
-
-        <div class="card">
-
-            <h2>★★★★★</h2>
-
-            <p>
-                Excellent bridal makeup service.
-            </p>
-
-            <b>Priya</b>
-
+<section class="section">
+  <div class="sec-inner">
+    <div class="reviews-layout">
+      <div class="reviews-grid">
+        <div class="r-card">
+          <div class="r-stars">★★★★★</div>
+          <div class="r-text">"The bridal makeup was absolutely stunning. I felt like a completely different person — in the best way. Every guest kept asking who did my makeup."</div>
+          <div class="r-author">
+            <div class="r-avatar">P</div>
+            <div><div class="r-name">Priya R.</div><div class="r-service">Bridal Makeup</div></div>
+          </div>
         </div>
-
-        <div class="card">
-
-            <h2>★★★★★</h2>
-
-            <p>
-                Very professional and friendly staff.
-            </p>
-
-            <b>Divya</b>
-
+        <div class="r-card">
+          <div class="r-stars">★★★★★</div>
+          <div class="r-text">"Very professional and friendly staff. The atmosphere made me feel at ease from the moment I walked in. My hair has never looked this good."</div>
+          <div class="r-author">
+            <div class="r-avatar">D</div>
+            <div><div class="r-name">Divya S.</div><div class="r-service">Hair Styling</div></div>
+          </div>
         </div>
-
-        <div class="card">
-
-            <h2>★★★★★</h2>
-
-            <p>
-                Best beauty academy experience.
-            </p>
-
-            <b>Kavya</b>
-
+        <div class="r-card">
+          <div class="r-stars">★★★★★</div>
+          <div class="r-text">"The academy training was so thorough and hands-on. I feel genuinely confident starting my beauty career now. The instructors are incredibly patient."</div>
+          <div class="r-author">
+            <div class="r-avatar">K</div>
+            <div><div class="r-name">Kavya M.</div><div class="r-service">Academy Training</div></div>
+          </div>
         </div>
+        <div class="r-card">
+          <div class="r-stars">★★★★★</div>
+          <div class="r-text">"Got the aroma facial done and my skin was glowing for a whole week after! The products they use are really gentle and effective. Highly recommend."</div>
+          <div class="r-author">
+            <div class="r-avatar">A</div>
+            <div><div class="r-name">Anitha J.</div><div class="r-service">Aroma Facial</div></div>
+          </div>
+        </div>
+        <div class="r-card">
+          <div class="r-stars">★★★★★</div>
+          <div class="r-text">"The Gold Bridal Package was worth every rupee. The makeup, hairstyle and saree draping were all perfect. Made my wedding day truly special."</div>
+          <div class="r-author">
+            <div class="r-avatar">S</div>
+            <div><div class="r-name">Swetha K.</div><div class="r-service">Gold Bridal Package</div></div>
+          </div>
+        </div>
+        <div class="r-card">
+          <div class="r-stars">★★★★★</div>
+          <div class="r-text">"Came for a haircut and hair spa combo and left feeling like a new person. The hair spa was so relaxing, and my hair feels so silky and healthy now."</div>
+          <div class="r-author">
+            <div class="r-avatar">M</div>
+            <div><div class="r-name">Meena T.</div><div class="r-service">Hair Spa Combo</div></div>
+          </div>
+        </div>
+      </div>
 
+      <div class="rb-card">
+        <div class="rb-title">Rating Breakdown</div>
+        <div class="rb-row"><span class="rb-lbl">5 ★</span><div class="rb-wrap"><div class="rb-bar" style="width:85%"></div></div><span class="rb-count">42</span></div>
+        <div class="rb-row"><span class="rb-lbl">4 ★</span><div class="rb-wrap"><div class="rb-bar" style="width:12%"></div></div><span class="rb-count">6</span></div>
+        <div class="rb-row"><span class="rb-lbl">3 ★</span><div class="rb-wrap"><div class="rb-bar" style="width:4%"></div></div><span class="rb-count">2</span></div>
+        <div class="rb-row"><span class="rb-lbl">2 ★</span><div class="rb-wrap"><div class="rb-bar" style="width:1%"></div></div><span class="rb-count">0</span></div>
+        <div class="rb-row" style="margin:0"><span class="rb-lbl">1 ★</span><div class="rb-wrap"><div class="rb-bar" style="width:0%"></div></div><span class="rb-count">0</span></div>
+      </div>
     </div>
 
+    <div class="share-cta">
+      <p>Had a great experience with us? Share it!</p>
+      <a class="btn-primary" href="https://wa.me/919025806588" target="_blank">💬 Share Your Review</a>
+    </div>
+  </div>
 </section>
 
-<!-- ================= SCRIPT ================= -->
-
-<script>
-
-function toggleMenu() {
-
-    document
-    .getElementById("navMenu")
-    .classList
-    .toggle("show");
-
-}
-
-</script>
-
+<footer>© 2025 JS Beauty Parlour & Academy · Chitteri, Vellore · <a href="tel:+919025806588">+91 9025806588</a></footer>
+<a class="wa-float" href="https://wa.me/919025806588" target="_blank">💬</a>
 </body>
 </html>
