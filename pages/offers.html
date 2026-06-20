@@ -1,188 +1,253 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offers — JS Beauty Parlour & Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#0A0A0A;--black-2:#111111;--black-3:#1A1A1A;--black-4:#242424;--rg:#E8A87C;--rg-light:#F5CBA7;--rg-deep:#C07840;--rg-muted:rgba(232,168,124,0.10);--rg-border:rgba(232,168,124,0.25);--white:#FFFFFF;--w70:rgba(255,255,255,0.70);--w40:rgba(255,255,255,0.40);--w15:rgba(255,255,255,0.08);--border:rgba(232,168,124,0.20);}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--w15);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+  .logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);text-decoration:none;}
+  .logo span{color:var(--rg);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1rem;line-height:64px;font-size:.78rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--w70);text-decoration:none;transition:color .2s;white-space:nowrap;}
+  .nav-links a:hover,.nav-links a.active{color:var(--rg);}
+  .nav-cta{background:var(--rg)!important;color:var(--black)!important;border-radius:4px;padding:0 1.2rem!important;height:36px;margin-top:14px;line-height:36px!important;font-size:.75rem!important;font-weight:600!important;letter-spacing:.1em!important;}
+  .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;}
+  .hamburger span{display:block;width:22px;height:1.5px;background:var(--white);margin:5px 0;}
 
-    <meta charset="UTF-8">
+  .hero-banner{
+    background:var(--black-2);border-bottom:1px solid var(--border);
+    padding:5rem 2rem 4rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .hero-banner::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(232,168,124,0.08) 0%,transparent 65%);pointer-events:none;}
+  .limited-tag{display:inline-block;border:1px solid var(--border);border-radius:4px;padding:4px 14px;font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--rg);margin-bottom:1.2rem;position:relative;}
+  .h-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.6rem);font-weight:700;color:var(--white);position:relative;}
+  .h-title em{font-style:italic;color:var(--rg);}
+  .h-sub{font-size:.88rem;color:var(--w40);margin-top:.6rem;position:relative;}
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+  .section{padding:5rem 2rem;}
+  .sec-inner{max-width:1200px;margin:0 auto;}
 
-    <title>
-        Special Offers | JS Beauty Parlour
-    </title>
+  /* OFFERS GRID */
+  .offers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+  .offer-card{
+    background:var(--black-3);border:1px solid var(--w15);border-radius:14px;
+    overflow:hidden;transition:all .25s;position:relative;
+  }
+  .offer-card:hover{border-color:var(--border);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+  .offer-card.featured{border-color:var(--border);}
 
-    <link rel="stylesheet"
-          href="../style.css">
+  /* badge */
+  .badge{
+    position:absolute;top:12px;right:12px;z-index:2;
+    background:var(--rg);color:var(--black);font-size:.62rem;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;
+  }
 
+  /* real image styles */
+  .offer-img{
+    width:100%;height:200px;
+    position:relative;overflow:hidden;
+  }
+  .offer-img img{
+    width:100%;height:100%;object-fit:cover;object-position:center;display:block;
+    transition:transform .4s ease;
+  }
+  .offer-card:hover .offer-img img{transform:scale(1.06);}
+  .offer-img::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(to bottom,transparent 55%,rgba(10,10,10,0.6) 100%);
+    pointer-events:none;
+  }
+
+  .offer-body{padding:1.4rem;}
+  .offer-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--white);margin-bottom:.3rem;}
+  .offer-desc{font-size:.8rem;color:var(--w40);margin-bottom:1rem;line-height:1.6;}
+  .offer-price{display:flex;align-items:baseline;gap:8px;margin-bottom:1.2rem;}
+  .price-main{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:var(--rg);}
+  .price-note{font-size:.75rem;color:var(--w40);}
+  .offer-btn{
+    display:block;text-align:center;background:var(--rg-muted);color:var(--rg);
+    border:1px solid var(--border);border-radius:4px;padding:9px;
+    font-size:.77rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    cursor:pointer;transition:all .2s;text-decoration:none;
+  }
+  .offer-btn:hover{background:var(--rg);color:var(--black);}
+
+  .offer-note{
+    background:var(--black-3);border:1px solid var(--border);border-radius:10px;
+    padding:1.4rem 1.8rem;margin-top:2rem;text-align:center;
+    font-size:.86rem;color:var(--w70);
+  }
+  .offer-note strong{color:var(--rg);}
+
+  footer{background:var(--black-2);border-top:1px solid var(--w15);padding:2rem;text-align:center;font-size:.78rem;color:var(--w40);}
+  footer a{color:var(--rg);text-decoration:none;}
+  .wa-float{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;width:52px;height:52px;border-radius:50%;background:#25D366;color:white;font-size:1.5rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 4px 24px rgba(37,211,102,0.4);transition:transform .2s;}
+  .wa-float:hover{transform:scale(1.1);}
+
+  @media(max-width:900px){.offers-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.offers-grid{grid-template-columns:1fr;}}
+  @media(max-width:768px){
+    .nav-links{display:none;}.hamburger{display:block;}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--black-2);border-bottom:1px solid var(--w15);z-index:99;padding:1rem 0;}
+    .nav-links.open a{line-height:48px;padding:0 2rem;}
+    .nav-links.open .nav-cta{margin:0 2rem;height:44px;line-height:44px!important;}
+  }
+</style>
 </head>
+<body>
 
-<body class="page-background">
-
-<!-- ================= NAVBAR ================= -->
-
-<nav class="navbar">
-
-    <div class="logo">
-        JS Beauty Parlour & Academy
-    </div>
-
-    <!-- MOBILE MENU BUTTON -->
-    <button class="menu-toggle"
-            onclick="toggleMenu()">
-        ☰
-    </button>
-
-    <ul id="navMenu" class="nav-menu">
-
-        <li><a href="../index.html">Home</a></li>
-
-        <li><a href="services.html">Services</a></li>
-
-        <li><a href="gallery.html">Gallery</a></li>
-
-        <li><a href="offers.html">Offers</a></li>
-
-        <li><a href="reviews.html">Reviews</a></li>
-
-        <li><a href="booking.html">Book</a></li>
-
-        <li><a href="contact.html">Contact</a></li>
-
-    </ul>
-
+<nav>
+  <a class="logo" href="index.html">JS <span>Beauty</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="offers.html" class="active">Offers</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="booking.html" class="nav-cta">Book Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- ================= OFFERS ================= -->
+<div class="hero-banner">
+  <div class="limited-tag">Limited Time</div>
+  <h1 class="h-title">Special <em>Offers</em> & Packages</h1>
+  <p class="h-sub">Curated deals — because looking good shouldn't cost a fortune</p>
+</div>
 
-<section class="offers-page">
+<section class="section">
+  <div class="sec-inner">
+    <div class="offers-grid">
 
-    <h1>
-        Special Offers & Packages
-    </h1>
-
-    <p>
-        Limited Period Beauty Offers
-    </p>
-
-    <div class="offer-grid">
-
-        <div class="offer-card">
-
-            <h2>Summer Hair Spa Offer</h2>
-
-            <h3>₹999</h3>
-
-            <p>
-                Haircut + Hair Spa Package
-            </p>
-
+      <!-- Bridal Gold Package -->
+      <div class="offer-card featured">
+        <div class="badge">Most Popular</div>
+        <div class="offer-img">
+          <img src="../images/Bridalgoldpackage.png" alt="Bridal Gold Package">
         </div>
-
-        <div class="offer-card">
-
-            <h2>Aroma Facial</h2>
-
-            <h3>₹699</h3>
-
-            <p>
-                Relaxing Aroma Facial Treatment
-            </p>
-
+        <div class="offer-body">
+          <div class="offer-title">Bridal Gold Package</div>
+          <div class="offer-desc">Makeup + Hairstyle + Saree Draping — complete bridal glam for your big day</div>
+          <div class="offer-price"><span class="price-main">₹4,999</span><span class="price-note">full package</span></div>
+          <a class="offer-btn" href="booking.html">Book This Package</a>
         </div>
+      </div>
 
-        <div class="offer-card">
-
-            <h2>Hair Colouring</h2>
-
-            <h3>25% OFF</h3>
-
-            <p>
-                Professional Hair Colour Services
-            </p>
-
+      <!-- Summer Hair Spa -->
+      <div class="offer-card">
+        <div class="offer-img">
+          <img src="../images/Summerhairspa.png" alt="Summer Hair Spa">
         </div>
-
-        <div class="offer-card">
-
-            <h2>Smoothing & Straightening</h2>
-
-            <h3>₹3999</h3>
-
-            <p>
-                Premium Hair Straightening Package
-            </p>
-
+        <div class="offer-body">
+          <div class="offer-title">Summer Hair Spa</div>
+          <div class="offer-desc">Haircut + Hair Spa combo — refresh your hair this season</div>
+          <div class="offer-price"><span class="price-main">₹999</span><span class="price-note">combo deal</span></div>
+          <a class="offer-btn" href="booking.html">Book This Package</a>
         </div>
+      </div>
 
-        <div class="offer-card">
-
-            <h2>Bridal Gold Package</h2>
-
-            <h3>₹4999</h3>
-
-            <p>
-                Makeup + Hairstyle + Saree Draping
-            </p>
-
+      <!-- Aroma Facial -->
+      <div class="offer-card">
+        <div class="offer-img">
+          <img src="../images/AromaFacial.png" alt="Aroma Facial">
         </div>
-
-        <div class="offer-card">
-
-            <h2>Hair Spa & Anti-Dandruff</h2>
-
-            <h3>20% OFF</h3>
-
-            <p>
-                Healthy Hair Special Package
-            </p>
-
+        <div class="offer-body">
+          <div class="offer-title">Aroma Facial</div>
+          <div class="offer-desc">Relaxing aroma facial treatment for a radiant, glowing skin</div>
+          <div class="offer-price"><span class="price-main">₹699</span><span class="price-note">per session</span></div>
+          <a class="offer-btn" href="booking.html">Book This Package</a>
         </div>
+      </div>
 
-        <div class="offer-card">
-
-            <h2>Children Haircut</h2>
-
-            <h3>₹99</h3>
-
-            <p>
-                Special Kids Haircut Offer
-            </p>
-
+      <!-- Hair Colouring -->
+      <div class="offer-card">
+        <div class="badge">25% Off</div>
+        <div class="offer-img">
+          <img src="../images/HairColouring.png" alt="Hair Colouring">
         </div>
-
-        <div class="offer-card">
-
-            <h2>Bridal Makeup</h2>
-
-            <h3>20% OFF</h3>
-
-            <p>
-                Limited Time Bridal Offer
-            </p>
-
+        <div class="offer-body">
+          <div class="offer-title">Hair Colouring</div>
+          <div class="offer-desc">Professional hair colour services with premium products</div>
+          <div class="offer-price"><span class="price-main">25% OFF</span></div>
+          <a class="offer-btn" href="booking.html">Book This Package</a>
         </div>
+      </div>
+
+      <!-- Smoothing & Straightening -->
+      <div class="offer-card">
+        <div class="offer-img">
+          <img src="../images/Smoothing.png" alt="Smoothing & Straightening">
+        </div>
+        <div class="offer-body">
+          <div class="offer-title">Smoothing & Straightening</div>
+          <div class="offer-desc">Premium hair straightening for silky, frizz-free hair that lasts</div>
+          <div class="offer-price"><span class="price-main">₹3,999</span><span class="price-note">premium package</span></div>
+          <a class="offer-btn" href="booking.html">Book This Package</a>
+        </div>
+      </div>
+
+      <!-- Hair Treatment -->
+      <div class="offer-card">
+        <div class="badge">20% Off</div>
+        <div class="offer-img">
+          <img src="../images/Hairtreatment.png" alt="Hair Spa & Anti-Dandruff">
+        </div>
+        <div class="offer-body">
+          <div class="offer-title">Hair Spa & Anti-Dandruff</div>
+          <div class="offer-desc">Healthy hair special package for scalp nourishment and shine</div>
+          <div class="offer-price"><span class="price-main">20% OFF</span></div>
+          <a class="offer-btn" href="booking.html">Book This Package</a>
+        </div>
+      </div>
+
+      <!-- Children's Haircut -->
+      <div class="offer-card">
+        <div class="offer-img">
+          <img src="../images/Childrenhaircut.png" alt="Children's Haircut">
+        </div>
+        <div class="offer-body">
+          <div class="offer-title">Children's Haircut</div>
+          <div class="offer-desc">Special kids haircut offer — gentle, fun, and quick</div>
+          <div class="offer-price"><span class="price-main">₹99</span><span class="price-note">per child</span></div>
+          <a class="offer-btn" href="booking.html">Book This Package</a>
+        </div>
+      </div>
+
+      <!-- Bridal Makeup Offer -->
+      <div class="offer-card">
+        <div class="badge">20% Off</div>
+        <div class="offer-img">
+          <img src="../images/BridalMakeup.png" alt="Bridal Makeup Offer">
+        </div>
+        <div class="offer-body">
+          <div class="offer-title">Bridal Makeup Offer</div>
+          <div class="offer-desc">Limited time discount on all bridal makeup packages</div>
+          <div class="offer-price"><span class="price-main">20% OFF</span></div>
+          <a class="offer-btn" href="booking.html">Book This Package</a>
+        </div>
+      </div>
 
     </div>
 
+    <div class="offer-note">
+      🎉 <strong>All offers valid for limited period.</strong> Call or WhatsApp to confirm availability before booking.
+    </div>
+  </div>
 </section>
 
-<!-- ================= SCRIPT ================= -->
-
-<script>
-
-function toggleMenu() {
-
-    document
-    .getElementById("navMenu")
-    .classList
-    .toggle("show");
-
-}
-
-</script>
-
+<footer>© 2025 JS Beauty Parlour & Academy · Chitteri, Vellore · <a href="tel:+919025806588">+91 9025806588</a></footer>
+<a class="wa-float" href="https://wa.me/919025806588" target="_blank">💬</a>
 </body>
 </html>
 
