@@ -1,133 +1,208 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — JS Beauty Parlour & Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#0A0A0A;--black-2:#111111;--black-3:#1A1A1A;--black-4:#242424;--rg:#E8A87C;--rg-light:#F5CBA7;--rg-deep:#C07840;--rg-muted:rgba(232,168,124,0.10);--rg-border:rgba(232,168,124,0.25);--white:#FFFFFF;--w70:rgba(255,255,255,0.70);--w40:rgba(255,255,255,0.40);--w15:rgba(255,255,255,0.08);--border:rgba(232,168,124,0.20);}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--w15);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+  .logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);text-decoration:none;}
+  .logo span{color:var(--rg);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1rem;line-height:64px;font-size:.78rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--w70);text-decoration:none;transition:color .2s;white-space:nowrap;}
+  .nav-links a:hover,.nav-links a.active{color:var(--rg);}
+  .nav-cta{background:var(--rg)!important;color:var(--black)!important;border-radius:4px;padding:0 1.2rem!important;height:36px;margin-top:14px;line-height:36px!important;font-size:.75rem!important;font-weight:600!important;letter-spacing:.1em!important;}
+  .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;}
+  .hamburger span{display:block;width:22px;height:1.5px;background:var(--white);margin:5px 0;}
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+  .page-banner{background:var(--black-2);border-bottom:1px solid var(--border);padding:4.5rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden;}
+  .page-banner::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(232,168,124,0.06) 0%,transparent 70%);}
+  .pb-eye{font-size:.68rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--rg);display:block;margin-bottom:.6rem;position:relative;}
+  .pb-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.4rem);font-weight:700;color:var(--white);position:relative;}
+  .pb-title em{font-style:italic;color:var(--rg);}
+  .pb-sub{font-size:.88rem;color:var(--w40);margin-top:.5rem;position:relative;}
 
-<title>Contact Us</title>
+  .section{padding:5rem 2rem;}
+  .sec-inner{max-width:1200px;margin:0 auto;}
 
-<link rel="stylesheet" href="../style.css">
+  .contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
 
+  /* CONTACT INFO */
+  .ci-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--white);margin-bottom:1.8rem;}
+  .ci-title em{font-style:italic;color:var(--rg);}
+  .ci-item{display:flex;gap:14px;margin-bottom:2rem;}
+  .ci-icon{width:46px;height:46px;border-radius:10px;background:var(--rg-muted);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+  .ci-lbl{font-size:.68rem;font-weight:600;color:var(--w40);text-transform:uppercase;letter-spacing:.1em;}
+  .ci-val{font-size:.95rem;color:var(--white);margin-top:3px;line-height:1.5;}
+  .ci-val a{color:var(--rg);text-decoration:none;transition:opacity .2s;}
+  .ci-val a:hover{opacity:.8;}
+
+  /* SOCIAL */
+  .social-row{display:flex;gap:10px;margin-top:2rem;flex-wrap:wrap;}
+  .social-btn{
+    display:flex;align-items:center;gap:8px;padding:10px 18px;
+    border:1px solid var(--w15);border-radius:8px;font-size:.8rem;color:var(--w70);
+    text-decoration:none;transition:all .2s;font-weight:500;
+  }
+  .social-btn:hover{background:var(--rg);color:var(--black);border-color:var(--rg);}
+
+  /* MAP SIDE */
+  .map-wrap{border-radius:16px;overflow:hidden;border:1px solid var(--w15);height:360px;background:var(--black-3);}
+  .map-wrap iframe{width:100%;height:100%;border:none;display:block;filter:grayscale(30%) invert(5%);}
+
+  .book-cta{background:var(--rg-muted);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:1.5rem;}
+  .bc-lbl{font-size:.68rem;font-weight:600;color:var(--rg);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem;}
+  .bc-text{font-size:.84rem;color:var(--w70);margin-bottom:1rem;line-height:1.6;}
+  .cta-row{display:flex;gap:.8rem;flex-wrap:wrap;}
+  .btn-primary{background:var(--rg);color:var(--black);padding:.8rem 1.6rem;border-radius:4px;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+  .btn-primary:hover{background:var(--rg-light);}
+  .wa-inline{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:white;padding:.8rem 1.6rem;border-radius:4px;font-size:.8rem;font-weight:600;text-decoration:none;transition:opacity .2s;}
+  .wa-inline:hover{opacity:.9;}
+
+  /* QUICK INFO STRIP */
+  .info-strip{
+    background:var(--black-3);border:1px solid var(--w15);border-radius:14px;
+    padding:2rem;margin-top:3rem;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--w15);
+  }
+  .is-item{background:var(--black-3);padding:1.5rem;text-align:center;}
+  .is-icon{font-size:1.6rem;margin-bottom:.6rem;}
+  .is-label{font-size:.68rem;font-weight:600;color:var(--w40);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem;}
+  .is-val{font-size:.85rem;color:var(--white);font-weight:500;}
+
+  footer{background:var(--black-2);border-top:1px solid var(--w15);padding:2rem;text-align:center;font-size:.78rem;color:var(--w40);}
+  footer a{color:var(--rg);text-decoration:none;}
+  .wa-float{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;width:52px;height:52px;border-radius:50%;background:#25D366;color:white;font-size:1.5rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 4px 24px rgba(37,211,102,0.4);transition:transform .2s;}
+  .wa-float:hover{transform:scale(1.1);}
+
+  @media(max-width:900px){
+    .contact-layout{grid-template-columns:1fr;}
+    .info-strip{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:768px){
+    .nav-links{display:none;}.hamburger{display:block;}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--black-2);border-bottom:1px solid var(--w15);z-index:99;padding:1rem 0;}
+    .nav-links.open a{line-height:48px;padding:0 2rem;}
+    .nav-links.open .nav-cta{margin:0 2rem;height:44px;line-height:44px!important;}
+  }
+  @media(max-width:480px){.info-strip{grid-template-columns:1fr 1fr;}}
+</style>
 </head>
+<body>
 
-<body class="page-background">
-
-<!-- ================= NAVBAR ================= -->
-
-<nav class="navbar">
-
-    <div class="logo">
-        JS Beauty Parlour & Academy
-    </div>
-
-    <!-- MOBILE MENU BUTTON -->
-    <button class="menu-toggle"
-            onclick="toggleMenu()">
-        ☰
-    </button>
-
-    <ul id="navMenu" class="nav-menu">
-
-        <li><a href="../index.html">Home</a></li>
-
-        <li><a href="services.html">Services</a></li>
-
-        <li><a href="gallery.html">Gallery</a></li>
-
-        <li><a href="offers.html">Offers</a></li>
-
-        <li><a href="reviews.html">Reviews</a></li>
-
-        <li><a href="booking.html">Book</a></li>
-
-        <li><a href="contact.html">Contact</a></li>
-
-    </ul>
-
+<nav>
+  <a class="logo" href="index.html">JS <span>Beauty</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="offers.html">Offers</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li><a href="booking.html" class="nav-cta">Book Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- ================= CONTACT ================= -->
-
-<div class="contact-container">
-
-    <h1>Contact Us</h1>
-
-    <h3>Phone</h3>
-    <p>+91 9025806588</p>
-
-    <h3>Email</h3>
-    <p>jsbeautyparlour@gmail.com</p>
-
-    <h3>Address</h3>
-    <p>Chitteri, Vellore, Tamil Nadu</p>
-
-    <h3>Instagram</h3>
-
-    <a href="https://www.instagram.com/jo_make_over_?igsh=MXJocXg3N2FsejMzOQ=="
-       target="_blank">
-
-        Visit Instagram
-
-    </a>
-
-    <br><br>
-
-    <a href="https://wa.me/919025806588"
-       target="_blank">
-
-        WhatsApp Booking
-
-    </a>
-
+<div class="page-banner">
+  <span class="pb-eye">Get In Touch</span>
+  <h1 class="pb-title">Contact <em>Us</em></h1>
+  <p class="pb-sub">We'd love to hear from you — call, message, or drop in</p>
 </div>
 
-<!-- ================= LOCATION ================= -->
+<section class="section">
+  <div class="sec-inner">
+    <div class="contact-layout">
+      <div>
+        <h2 class="ci-title">Find Us & <em>Reach Out</em></h2>
+        <div class="ci-item">
+          <div class="ci-icon">📞</div>
+          <div>
+            <div class="ci-lbl">Phone / WhatsApp</div>
+            <div class="ci-val"><a href="tel:+919025806588">+91 9025806588</a></div>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon">✉</div>
+          <div>
+            <div class="ci-lbl">Email</div>
+            <div class="ci-val"><a href="mailto:jsbeautyparlour@gmail.com">jsbeautyparlour@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon">📍</div>
+          <div>
+            <div class="ci-lbl">Address</div>
+            <div class="ci-val">Chitteri, Vellore, Tamil Nadu 632002</div>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon">⏰</div>
+          <div>
+            <div class="ci-lbl">Working Hours</div>
+            <div class="ci-val">Mon – Sat: 9 AM to 7 PM<br>Sunday: By appointment only</div>
+          </div>
+        </div>
+        <div class="social-row">
+          <a href="https://www.instagram.com/jo_make_over_" target="_blank" class="social-btn">📸 Instagram</a>
+          <a href="https://wa.me/919025806588" target="_blank" class="social-btn">💬 WhatsApp</a>
+        </div>
+      </div>
 
-<div class="map-section">
+      <div>
+        <div class="map-wrap">
+          <iframe
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3888.5!2d79.1193145!3d12.8752016!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f3b0d7d3ab67957%3A0x0!2sChitteri%2C+Vellore%2C+Tamil+Nadu+632002%2C+India!5e0!3m2!1sen!2sin!4v1"
+  allowfullscreen="" loading="lazy">
+</iframe>
+        </div>
+        <div class="book-cta">
+          <div class="bc-lbl">Ready to Book?</div>
+          <p class="bc-text">Book an appointment online or just walk in — we'd love to see you.</p>
+          <div class="cta-row">
+            <a class="btn-primary" href="booking.html">Book Online</a>
+            <a href="https://wa.me/919025806588" target="_blank" class="wa-inline">💬 WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <h1 class="map-title">
-        Location
-    </h1>
+    <!-- QUICK INFO STRIP -->
+    <div class="info-strip">
+      <div class="is-item">
+        <div class="is-icon">🏆</div>
+        <div class="is-label">Experience</div>
+        <div class="is-val">5+ Years</div>
+      </div>
+      <div class="is-item">
+        <div class="is-icon">👰</div>
+        <div class="is-label">Brides Served</div>
+        <div class="is-val">100+</div>
+      </div>
+      <div class="is-item">
+        <div class="is-icon">🎓</div>
+        <div class="is-label">Students Trained</div>
+        <div class="is-val">200+</div>
+      </div>
+      <div class="is-item">
+        <div class="is-icon">⭐</div>
+        <div class="is-label">Rating</div>
+        <div class="is-val">4.9 / 5.0</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <iframe
-    src="https://www.google.com/maps?q=Chitteri,+Vellore,+Tamil+Nadu+632002,+India&output=embed"
-    width="100%"
-    height="350"
-    style="border:0;"
-    loading="lazy">
-    </iframe>
-
-</div>
-
-<!-- ================= FLOATING WHATSAPP ================= -->
-
-<a href="https://wa.me/919025806588"
-   class="whatsapp"
-   target="_blank">
-
-💬
-
-</a>
-
-<!-- ================= SCRIPT ================= -->
-
-<script>
-
-function toggleMenu() {
-
-    document
-    .getElementById("navMenu")
-    .classList
-    .toggle("show");
-
-}
-
-</script>
-
+<footer>© 2025 JS Beauty Parlour & Academy · Chitteri, Vellore · <a href="tel:+919025806588">+91 9025806588</a></footer>
+<a class="wa-float" href="https://wa.me/919025806588" target="_blank">💬</a>
 </body>
 </html>
