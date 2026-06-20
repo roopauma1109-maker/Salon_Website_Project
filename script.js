@@ -8,17 +8,20 @@ let ALL_APPOINTMENTS = [];
 // LOAD APPOINTMENTS
 // ===========================
 async function loadAppointments() {
-
     try {
-
         const res = await fetch(`${API_BASE}/appointments`);
 
         if (!res.ok) {
-            console.error("API error");
+            console.error("API error:", res.status);
             return;
         }
 
         const data = await res.json();
+
+        if (!Array.isArray(data)) {
+            console.error("Invalid API response:", data);
+            return;
+        }
 
         ALL_APPOINTMENTS = data;
 
@@ -34,7 +37,7 @@ async function loadAppointments() {
 // MOBILE MENU
 // ===========================
 function toggleMenu() {
-    document.getElementById("navMenu").classList.toggle("show");
+    document.getElementById("navMenu")?.classList.toggle("show");
 }
 
 // ===========================
@@ -45,15 +48,12 @@ function showPopup(message) {
     const popup = document.getElementById("successPopup");
     if (!popup) return;
 
-    const title = popup.querySelector("h2");
     const text = popup.querySelector("p");
-
-    if (title) title.innerText = "Notification";
     if (text) text.innerText = message;
 
     popup.classList.add("show");
 
-    if (popup.hideTimer) clearTimeout(popup.hideTimer);
+    clearTimeout(popup.hideTimer);
 
     popup.hideTimer = setTimeout(() => {
         popup.classList.remove("show");
@@ -65,71 +65,50 @@ function showPopup(message) {
 // ===========================
 function updateCounters(data) {
 
-    const safe = (s) => (s ?? "Pending");
+    const total = document.getElementById("totalBookings");
+    const pending = document.getElementById("pendingCount");
+    const done = document.getElementById("doneCount");
 
-    document.getElementById("totalBookings").innerText = data.length;
+    if (!total || !pending || !done) return;
 
-    document.getElementById("pendingCount").innerText =
-        data.filter(a => safe(a.status) === "Pending").length;
+    total.innerText = data.length;
 
-    document.getElementById("doneCount").innerText =
-        data.filter(a => safe(a.status) === "Done").length;
+    pending.innerText = data.filter(a => (a.status || "Pending") === "Pending").length;
+
+    done.innerText = data.filter(a => a.status === "Done").length;
 }
 
 // ===========================
-// RENDER TABLE
+// RENDER TABLE (FIXED)
 // ===========================
 function renderTable(data) {
 
-    const table = document.getElementById("appointmentTable");
-    if (!table) return;
+    const tbody = document.getElementById("appointmentTableBody");
+    if (!tbody) {
+        console.error("appointmentTableBody not found");
+        return;
+    }
 
-    table.innerHTML = data.map(item => {
+    tbody.innerHTML = data.map(item => {
 
-        const status = (item.status ?? "Pending");
+        const status = item.status || "Pending";
 
         return `
         <tr>
 
             <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.phone}</td>
-            <td>${item.service}</td>
-            <td>${item.date}</td>
-            <td>${item.time}</td>
+            <td>${item.name || "-"}</td>
+            <td>${item.phone || "-"}</td>
+            <td>${item.service || "-"}</td>
+            <td>${item.date || "-"}</td>
+            <td>${item.time || "-"}</td>
 
-            <!-- WHATSAPP -->
-            <td>
-                <a class="whatsapp-btn"
-                   target="_blank"
-                   href="https://wa.me/91${item.phone}?text=${encodeURIComponent(
-`APPOINTMENT CONFIRMATION
-
-Dear ${item.name},
-
-Your appointment has been scheduled at JS Beauty Parlour & Academy.
-
-Service : ${item.service}
-Date    : ${item.date}
-Time    : ${item.time}
-
-Please arrive 10 minutes early.
-
-Regards,
-JS Beauty Parlour & Academy`
-                   )}">
-                   WhatsApp
-                </a>
-            </td>
-
-            <!-- DELETE -->
             <td>
                 <button onclick="deleteAppointment(${item.id})">
                     Delete
                 </button>
             </td>
 
-            <!-- STATUS -->
             <td>
                 <button onclick="toggleStatus(${item.id})"
                     style="
@@ -154,11 +133,7 @@ JS Beauty Parlour & Academy`
 // ===========================
 window.toggleStatus = async function (id) {
 
-    const item = ALL_APPOINTMENTS.find(a => a.id === id);
-    if (!item) return;
-
     try {
-
         const res = await fetch(
             `${API_BASE}/appointment/${id}/toggle-status`,
             { method: "PUT" }
@@ -173,12 +148,7 @@ window.toggleStatus = async function (id) {
 
         await loadAppointments();
 
-        showPopup(`Appointment for ${item.name} marked as ${updated.status}`);
-
-        // If backend sends WhatsApp link
-        if (updated.whatsapp) {
-            window.open(updated.whatsapp, "_blank", "noopener,noreferrer");
-        }
+        showPopup(`Status updated to ${updated.status}`);
 
     } catch (err) {
         console.error("Toggle error:", err);
@@ -191,19 +161,22 @@ window.toggleStatus = async function (id) {
 window.deleteAppointment = async function (id) {
 
     try {
-
         const res = await fetch(
             `${API_BASE}/appointment/${id}`,
             { method: "DELETE" }
         );
 
-        if (!res.ok) return;
+        if (!res.ok) {
+            alert("Delete failed");
+            return;
+        }
 
         await loadAppointments();
+
         showPopup("Appointment deleted successfully");
 
     } catch (err) {
-        console.error(err);
+        console.error("Delete error:", err);
     }
 };
 
@@ -217,8 +190,8 @@ window.applyFilters = function () {
     const date = document.getElementById("filterDate")?.value || "";
 
     const filtered = ALL_APPOINTMENTS.filter(item =>
-        item.name.toLowerCase().includes(name) &&
-        item.service.toLowerCase().includes(service) &&
+        (item.name || "").toLowerCase().includes(name) &&
+        (item.service || "").toLowerCase().includes(service) &&
         (date === "" || item.date === date)
     );
 
@@ -231,15 +204,19 @@ window.applyFilters = function () {
 // ===========================
 window.resetFilters = function () {
 
-    document.getElementById("filterName").value = "";
-    document.getElementById("filterService").value = "";
-    document.getElementById("filterDate").value = "";
+    const name = document.getElementById("filterName");
+    const service = document.getElementById("filterService");
+    const date = document.getElementById("filterDate");
+
+    if (name) name.value = "";
+    if (service) service.value = "";
+    if (date) date.value = "";
 
     updateCounters(ALL_APPOINTMENTS);
     renderTable(ALL_APPOINTMENTS);
 };
 
 // ===========================
-// INITIAL LOAD
+// INIT
 // ===========================
 window.addEventListener("DOMContentLoaded", loadAppointments);

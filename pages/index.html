@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS Beauty Parlour & Academy — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0A0A0A;
+    --black-2: #111111;
+    --black-3: #1A1A1A;
+    --black-4: #242424;
+    --rg: #E8A87C;
+    --rg-light: #F5CBA7;
+    --rg-deep: #C07840;
+    --rg-muted: rgba(232,168,124,0.10);
+    --rg-border: rgba(232,168,124,0.25);
+    --white: #FFFFFF;
+    --w70: rgba(255,255,255,0.70);
+    --w40: rgba(255,255,255,0.40);
+    --w15: rgba(255,255,255,0.08);
+    --border: rgba(232,168,124,0.20);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); overflow-x:hidden; }
+
+  /* NAV */
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(10,10,10,0.92); backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--w15);
+    height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 2rem;
+  }
+  .logo { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--white); text-decoration:none; letter-spacing:0.02em; }
+  .logo span { color:var(--rg); }
+  .nav-links { display:flex; list-style:none; gap:0; }
+  .nav-links a {
+    display:block; padding:0 1rem; line-height:64px;
+    font-size:0.78rem; font-weight:500; letter-spacing:0.09em; text-transform:uppercase;
+    color:var(--w70); text-decoration:none; transition:color .2s; white-space:nowrap;
+  }
+  .nav-links a:hover, .nav-links a.active { color:var(--rg); }
+  .nav-cta {
+    background:var(--rg) !important; color:var(--black) !important;
+    border-radius:4px; padding:0 1.2rem !important; height:36px; margin-top:14px;
+    line-height:36px !important; font-size:0.75rem !important; font-weight:600 !important;
+    letter-spacing:0.1em !important; transition:background .2s !important;
+  }
+  .nav-cta:hover { background:var(--rg-light) !important; color:var(--black) !important; }
+  .hamburger { display:none; background:none; border:none; cursor:pointer; padding:4px; }
+  .hamburger span { display:block; width:22px; height:1.5px; background:var(--white); margin:5px 0; transition:.3s; }
+
+  /* HERO */
+  .hero {
+    min-height:92vh; display:grid; grid-template-columns:1fr 1fr; align-items:center;
+    padding:5rem 2rem; max-width:1280px; margin:0 auto; gap:5rem; position:relative;
+  }
+  .hero::before {
+    content:''; position:fixed; top:0; right:0; width:55vw; height:100vh; pointer-events:none;
+    background:radial-gradient(ellipse at 80% 40%, rgba(232,168,124,0.07) 0%, transparent 65%);
+    z-index:0;
+  }
+  .hero-left { position:relative; z-index:1; }
+  .hero h1 {
+    font-family:'Playfair Display',serif;
+    font-size:clamp(3rem,5.5vw,5rem); font-weight:700; line-height:1.06;
+    color:var(--white); margin-bottom:1.6rem; letter-spacing:-0.01em;
+  }
+  .hero h1 em { font-style:italic; color:var(--rg); }
+  .hero-desc { font-size:1rem; color:var(--w70); line-height:1.8; max-width:420px; margin-bottom:2.5rem; }
+  .hero-btns { display:flex; gap:1rem; flex-wrap:wrap; }
+  .btn-primary {
+    background:var(--rg); color:var(--black); padding:.9rem 2.2rem; border-radius:4px;
+    font-size:.83rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    text-decoration:none; transition:all .2s; display:inline-flex; align-items:center; gap:6px;
+    border:none; cursor:pointer;
+  }
+  .btn-primary:hover { background:var(--rg-light); transform:translateY(-2px); }
+  .btn-ghost {
+    border:1px solid var(--border); color:var(--w70); padding:.9rem 2.2rem; border-radius:4px;
+    font-size:.83rem; font-weight:500; letter-spacing:.06em;
+    text-decoration:none; transition:all .2s; display:inline-flex; align-items:center; gap:6px;
+  }
+  .btn-ghost:hover { border-color:var(--rg); color:var(--rg); }
+  .hero-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:3.5rem; background:var(--border); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .stat { padding:1.2rem 1rem; background:var(--black-3); text-align:center; }
+  .stat-n { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--rg); line-height:1; }
+  .stat-l { font-size:0.7rem; color:var(--w40); margin-top:4px; letter-spacing:.06em; }
+
+  /* HERO VISUAL */
+  .hero-right { position:relative; z-index:1; display:flex; justify-content:center; }
+  .hero-portrait {
+    width:380px;
+    aspect-ratio:3/4;
+    border-radius:16px 80px 16px 16px;
+    border:1px solid var(--border);
+    overflow:hidden;
+    position:relative;
+    background:var(--black-3);
+  }
+  .hero-portrait img.hero-img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center top;
+    display:block;
+  }
+  .hero-portrait::after {
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(160deg, rgba(232,168,124,0.06) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .badge-float {
+    position:absolute; bottom:-12px; left:-24px;
+    background:var(--black-4); border:1px solid var(--border); border-radius:12px;
+    padding:.9rem 1.1rem; display:flex; align-items:center; gap:10px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  }
+  .badge-float .b-icon { font-size:1.4rem; }
+  .badge-float .b-n { font-size:.95rem; font-weight:600; color:var(--white); }
+  .badge-float .b-l { font-size:.7rem; color:var(--w40); }
+
+  /* SECTION BASE */
+  .section { padding:6rem 2rem; }
+  .sec-inner { max-width:1200px; margin:0 auto; }
+  .sec-header { text-align:center; margin-bottom:3.5rem; }
+  .sec-eye { font-size:.68rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--rg); display:block; margin-bottom:.7rem; }
+  .sec-title { font-family:'Playfair Display',serif; font-size:clamp(1.9rem,3.2vw,2.8rem); font-weight:700; color:var(--white); line-height:1.18; }
+  .sec-title em { font-style:italic; color:var(--rg); }
+  .divider { width:44px; height:1px; background:var(--rg); margin:1.2rem auto 0; opacity:.5; }
+
+  /* SERVICES GRID */
+  .services-section { background:var(--black-2); }
+  .srv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  .srv-card {
+    background:var(--black-3); border:1px solid var(--w15); border-radius:14px;
+    padding:2.2rem 1.8rem; text-align:center; transition:all .25s; cursor:pointer;
+    text-decoration:none; color:inherit; display:block;
+  }
+  .srv-card:hover { border-color:var(--border); transform:translateY(-5px); box-shadow:0 20px 60px rgba(232,168,124,0.08); }
+  .srv-icon {
+    width:64px; height:64px; border-radius:50%; background:var(--rg-muted); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 1.2rem; font-size:1.8rem;
+  }
+  .srv-name { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:600; color:var(--white); margin-bottom:.5rem; }
+  .srv-desc { font-size:.83rem; color:var(--w40); line-height:1.7; }
+  .srv-link { display:inline-block; margin-top:1rem; font-size:.7rem; letter-spacing:.1em; color:var(--rg); text-transform:uppercase; }
+
+  /* WHY */
+  .why-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; }
+  .why-item { padding:2rem 1.5rem; border:1px solid var(--w15); border-radius:12px; transition:border-color .2s; }
+  .why-item:hover { border-color:var(--border); }
+  .why-icon { font-size:1.8rem; margin-bottom:1rem; }
+  .why-title { font-size:.95rem; font-weight:600; color:var(--white); margin-bottom:.5rem; }
+  .why-desc { font-size:.83rem; color:var(--w40); line-height:1.7; }
+
+  /* TESTIMONIALS */
+  .testi-section { background:var(--black-2); }
+  .testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+  .testi-card { background:var(--black-3); border:1px solid var(--w15); border-radius:12px; padding:1.8rem; }
+  .testi-stars { color:var(--rg); letter-spacing:2px; font-size:.85rem; margin-bottom:1rem; }
+  .testi-text { font-size:.88rem; color:var(--w70); line-height:1.75; font-style:italic; margin-bottom:1.2rem; }
+  .testi-author { font-size:.75rem; color:var(--rg); font-weight:600; letter-spacing:.06em; }
+
+  /* CTA BANNER */
+  .cta-banner {
+    background:linear-gradient(135deg, var(--black-3) 0%, var(--black-4) 100%);
+    border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    padding:5rem 2rem; text-align:center;
+  }
+  .cta-banner h2 { font-family:'Playfair Display',serif; font-size:2.6rem; font-weight:700; color:var(--white); margin-bottom:.8rem; }
+  .cta-banner h2 em { font-style:italic; color:var(--rg); }
+  .cta-banner p { color:var(--w40); font-size:.93rem; margin-bottom:2rem; }
+  .cta-row { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
+
+  /* FOOTER */
+  footer { background:var(--black-2); border-top:1px solid var(--w15); padding:3.5rem 2rem 2rem; }
+  .footer-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:3rem; }
+  .footer-brand { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--white); margin-bottom:.5rem; }
+  .footer-brand span { color:var(--rg); }
+  .footer-tagline { font-size:.8rem; color:var(--w40); line-height:1.8; }
+  .footer-contact { margin-top:1rem; font-size:.82rem; color:var(--w40); }
+  .footer-contact a { color:var(--rg); text-decoration:none; }
+  .f-heading { font-size:.68rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--w70); margin-bottom:1rem; }
+  .f-links { list-style:none; }
+  .f-links li { margin-bottom:6px; }
+  .f-links a { font-size:.83rem; color:var(--w40); text-decoration:none; transition:color .2s; cursor:pointer; }
+  .f-links a:hover { color:var(--rg); }
+  .footer-bottom { border-top:1px solid var(--w15); padding-top:1.5rem; text-align:center; font-size:.75rem; color:var(--w40); max-width:1200px; margin:2rem auto 0; }
+
+  /* WA FLOAT */
+  .wa-float {
+    position:fixed; bottom:1.5rem; right:1.5rem; z-index:200;
+    width:52px; height:52px; border-radius:50%; background:#25D366; color:white;
+    font-size:1.5rem; display:flex; align-items:center; justify-content:center;
+    text-decoration:none; box-shadow:0 4px 24px rgba(37,211,102,0.4); transition:transform .2s;
+  }
+  .wa-float:hover { transform:scale(1.1); }
+
+  /* RESPONSIVE */
+  @media(max-width:960px){
+    .hero { grid-template-columns:1fr; text-align:center; gap:3rem; padding:4rem 1.5rem; }
+    .hero-right { display:none; }
+    .hero-btns { justify-content:center; }
+    .hero-stats { grid-template-columns:repeat(2,1fr); }
+    .srv-grid,.why-grid,.testi-grid,.footer-inner { grid-template-columns:1fr; }
+    .nav-links { display:none; }
+    .hamburger { display:block; }
+    .nav-links.open { display:flex; flex-direction:column; position:absolute; top:64px; left:0; right:0; background:var(--black-2); border-bottom:1px solid var(--w15); z-index:99; padding:1rem 0; }
+    .nav-links.open a { line-height:48px; padding:0 2rem; }
+    .nav-links.open .nav-cta { margin:0 2rem; height:44px; line-height:44px !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="index.html">JS <span>Beauty</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="offers.html">Offers</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="booking.html" class="nav-cta">Book Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section style="background:var(--black); overflow:hidden; position:relative;">
+  <div class="hero">
+    <div class="hero-left">
+      <h1>Where Beauty<br>Meets <em>Artistry</em></h1>
+      <p class="hero-desc">Professional beauty services, bridal makeovers, expert hair styling and certified academy training — all under one roof in Vellore.</p>
+      <div class="hero-btns">
+        <a class="btn-primary" href="booking.html">✦ Book Appointment</a>
+        <a class="btn-ghost" href="gallery.html">View Our Work →</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-n">500+</div><div class="stat-l">Happy Clients</div></div>
+        <div class="stat"><div class="stat-n">100+</div><div class="stat-l">Bridal Makeups</div></div>
+        <div class="stat"><div class="stat-n">5+</div><div class="stat-l">Years Experience</div></div>
+        <div class="stat"><div class="stat-n">200+</div><div class="stat-l">Students Trained</div></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div style="position:relative;">
+        <div class="hero-portrait">
+          <img src="../images/hero.png" alt="JS Beauty Parlour" class="hero-img">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:35%;background:linear-gradient(to top,rgba(10,10,10,0.5),transparent);pointer-events:none;"></div>
+        </div>
+        <div class="badge-float">
+          <span class="b-icon">⭐</span>
+          <div><div class="b-n">4.9 / 5</div><div class="b-l">Client Satisfaction</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES PREVIEW -->
+<section class="section services-section">
+  <div class="sec-inner">
+    <div class="sec-header">
+      <span class="sec-eye">What We Offer</span>
+      <h2 class="sec-title">Our <em>Signature</em> Services</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="srv-grid">
+      <a class="srv-card" href="services.html">
+        <div class="srv-icon">♛</div>
+        <div class="srv-name">Bridal Makeup</div>
+        <div class="srv-desc">HD Makeup, Reception & Engagement looks that last all day with premium products and expert artistry.</div>
+        <span class="srv-link">Explore →</span>
+      </a>
+      <a class="srv-card" href="services.html">
+        <div class="srv-icon">✂</div>
+        <div class="srv-name">Hair Styling</div>
+        <div class="srv-desc">Haircut, Hair Spa, Coloring, Smoothing & Straightening by skilled stylists who love what they do.</div>
+        <span class="srv-link">Explore →</span>
+      </a>
+      <a class="srv-card" href="services.html">
+        <div class="srv-icon">❀</div>
+        <div class="srv-name">Facial & Skin</div>
+        <div class="srv-desc">Glow Facial, Cleanup, Detan Treatments tailored for your skin type and beauty goals.</div>
+        <span class="srv-link">Explore →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section" style="background:var(--black);">
+  <div class="sec-inner">
+    <div class="sec-header">
+      <span class="sec-eye">Why JS Beauty</span>
+      <h2 class="sec-title">The Difference You <em>Feel</em></h2>
+      <div class="divider"></div>
+    </div>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-icon">🎨</div>
+        <div class="why-title">Experienced Artists</div>
+        <div class="why-desc">Professional beauticians trained in modern techniques with 5+ years of hands-on experience in bridal and everyday beauty.</div>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">✨</div>
+        <div class="why-title">Premium Products Only</div>
+        <div class="why-desc">We use trusted, skin-safe beauty brands — because your skin deserves nothing less than what actually works.</div>
+      </div>
+      <div class="why-item">
+        <div class="why-icon">💎</div>
+        <div class="why-title">Affordable for Everyone</div>
+        <div class="why-desc">Quality beauty services at prices that make you feel pampered without breaking the bank. Packages for every budget.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testi-section">
+  <div class="sec-inner">
+    <div class="sec-header">
+      <span class="sec-eye">Client Love</span>
+      <h2 class="sec-title">What Our <em>Clients</em> Say</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"The bridal makeup was absolutely stunning. I felt like a different person — in the best way. Everyone kept complimenting me all day."</div>
+        <div class="testi-author">— Priya, Bridal Client</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Very professional and friendly staff. The atmosphere made me feel so comfortable. My hair has never looked better."</div>
+        <div class="testi-author">— Divya, Hair Styling</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"The academy training was thorough and practical. I feel confident starting my own career now. The instructors are so supportive."</div>
+        <div class="testi-author">— Kavya, Academy Student</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-banner">
+  <h2>Ready to <em>Glow Up?</em></h2>
+  <p>Book your appointment today and let our experts take care of the rest.</p>
+  <div class="cta-row">
+    <a class="btn-primary" href="booking.html">Book Your Session</a>
+    <a class="btn-ghost" href="https://wa.me/919025806588" target="_blank">💬 WhatsApp Us</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">JS <span>Beauty</span> Parlour & Academy</div>
+      <div class="footer-tagline">Professional beauty services, bridal makeovers, hair styling and beauty academy training in Chitteri, Vellore, Tamil Nadu.</div>
+      <div class="footer-contact">
+        <div>📞 <a href="tel:+919025806588">+91 9025806588</a></div>
+        <div style="margin-top:4px">✉ <a href="mailto:jsbeautyparlour@gmail.com">jsbeautyparlour@gmail.com</a></div>
+      </div>
+    </div>
+    <div>
+      <div class="f-heading">Quick Links</div>
+      <ul class="f-links">
+        <li><a href="services.html">Services</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="offers.html">Special Offers</a></li>
+        <li><a href="booking.html">Book Appointment</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-heading">Connect</div>
+      <ul class="f-links">
+        <li><a href="https://www.instagram.com/jo_make_over_" target="_blank">Instagram</a></li>
+        <li><a href="https://wa.me/919025806588" target="_blank">WhatsApp</a></li>
+        <li><a href="contact.html">Location & Map</a></li>
+        <li><a href="reviews.html">Customer Reviews</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 JS Beauty Parlour & Academy · Chitteri, Vellore</div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/919025806588" target="_blank" title="WhatsApp">💬</a>
+</body>
+</html>
