@@ -1,237 +1,246 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Appointment — JS Beauty Parlour & Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#0A0A0A;--black-2:#111111;--black-3:#1A1A1A;--black-4:#242424;--rg:#E8A87C;--rg-light:#F5CBA7;--rg-deep:#C07840;--rg-muted:rgba(232,168,124,0.10);--rg-border:rgba(232,168,124,0.25);--white:#FFFFFF;--w70:rgba(255,255,255,0.70);--w40:rgba(255,255,255,0.40);--w15:rgba(255,255,255,0.08);--border:rgba(232,168,124,0.20);}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--w15);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+  .logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);text-decoration:none;}
+  .logo span{color:var(--rg);}
+  .nav-links{display:flex;list-style:none;}
+  .nav-links a{display:block;padding:0 1rem;line-height:64px;font-size:.78rem;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--w70);text-decoration:none;transition:color .2s;white-space:nowrap;}
+  .nav-links a:hover,.nav-links a.active{color:var(--rg);}
+  .nav-cta{background:var(--rg)!important;color:var(--black)!important;border-radius:4px;padding:0 1.2rem!important;height:36px;margin-top:14px;line-height:36px!important;font-size:.75rem!important;font-weight:600!important;letter-spacing:.1em!important;}
+  .hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;}
+  .hamburger span{display:block;width:22px;height:1.5px;background:var(--white);margin:5px 0;}
 
-    <meta charset="UTF-8">
+  .page-banner{background:var(--black-2);border-bottom:1px solid var(--border);padding:4.5rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden;}
+  .page-banner::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(232,168,124,0.06) 0%,transparent 70%);}
+  .pb-eye{font-size:.68rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--rg);display:block;margin-bottom:.6rem;position:relative;}
+  .pb-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.4rem);font-weight:700;color:var(--white);position:relative;}
+  .pb-title em{font-style:italic;color:var(--rg);}
+  .pb-sub{font-size:.88rem;color:var(--w40);margin-top:.5rem;position:relative;}
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+  .section{padding:5rem 2rem;}
+  .sec-inner{max-width:1200px;margin:0 auto;}
 
-    <title>Book Appointment</title>
+  /* LAYOUT */
+  .booking-layout{display:grid;grid-template-columns:1fr 380px;gap:4rem;align-items:start;}
 
-    <link rel="stylesheet" href="../style.css">
+  /* FORM */
+  .form-card{background:var(--black-3);border:1px solid var(--w15);border-radius:16px;padding:2.5rem;}
+  .form-title{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:var(--white);margin-bottom:1.8rem;}
+  .form-group{margin-bottom:1.4rem;}
+  .form-label{display:block;font-size:.7rem;font-weight:600;color:var(--w40);margin-bottom:6px;letter-spacing:.1em;text-transform:uppercase;}
+  .form-input,.form-select,.form-textarea{
+    width:100%;padding:11px 14px;border:1px solid var(--w15);border-radius:8px;
+    font-family:'Inter',sans-serif;font-size:.9rem;color:var(--white);
+    background:var(--black-4);transition:border-color .2s;outline:none;
+    -webkit-appearance:none;
+  }
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--border);box-shadow:0 0 0 3px rgba(232,168,124,0.06);}
+  .form-select option{background:var(--black-4);}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .form-textarea{resize:vertical;min-height:90px;}
+  .form-submit{
+    width:100%;background:var(--rg);color:var(--black);border:none;cursor:pointer;
+    padding:14px;border-radius:8px;font-size:.88rem;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;font-family:'Inter',sans-serif;transition:background .2s;
+  }
+  .form-submit:hover{background:var(--rg-light);}
 
+  /* SUCCESS */
+  .booking-success{
+    display:none;text-align:center;padding:3rem;
+    background:var(--black-3);border:1px solid var(--border);border-radius:16px;
+  }
+  .s-icon{font-size:3rem;margin-bottom:1rem;display:block;}
+  .s-title{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);margin-bottom:.5rem;}
+  .s-text{font-size:.88rem;color:var(--w40);line-height:1.7;}
+  .wa-btn{
+    display:inline-flex;align-items:center;gap:8px;margin-top:1.5rem;
+    background:#25D366;color:white;padding:11px 22px;border-radius:6px;
+    font-size:.84rem;font-weight:600;text-decoration:none;transition:opacity .2s;
+  }
+  .wa-btn:hover{opacity:.9;}
+
+  /* SIDEBAR */
+  .booking-sidebar{position:sticky;top:84px;}
+  .info-card{background:var(--black-3);border:1px solid var(--w15);border-radius:16px;padding:2rem;margin-bottom:1.5rem;}
+  .ic-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--white);margin-bottom:1.4rem;}
+  .ic-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--w15);}
+  .ic-item:last-child{border:none;}
+  .ic-icon{font-size:1.1rem;margin-top:2px;flex-shrink:0;}
+  .ic-label{font-size:.82rem;color:var(--w40);line-height:1.6;}
+  .ic-label strong{color:var(--white);display:block;font-weight:600;margin-bottom:2px;}
+
+  .quick-card{background:var(--rg-muted);border:1px solid var(--border);border-radius:12px;padding:1.4rem;}
+  .qc-label{font-size:.68rem;font-weight:600;color:var(--rg);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem;}
+  .qc-text{font-size:.83rem;color:var(--w70);margin-bottom:1rem;line-height:1.6;}
+  .wa-inline{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:#25D366;color:white;padding:10px;border-radius:6px;
+    font-size:.82rem;font-weight:600;text-decoration:none;transition:opacity .2s;
+  }
+  .wa-inline:hover{opacity:.9;}
+
+  footer{background:var(--black-2);border-top:1px solid var(--w15);padding:2rem;text-align:center;font-size:.78rem;color:var(--w40);}
+  footer a{color:var(--rg);text-decoration:none;}
+  .wa-float{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;width:52px;height:52px;border-radius:50%;background:#25D366;color:white;font-size:1.5rem;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 4px 24px rgba(37,211,102,0.4);transition:transform .2s;}
+  .wa-float:hover{transform:scale(1.1);}
+
+  @media(max-width:900px){
+    .booking-layout{grid-template-columns:1fr;}
+    .booking-sidebar{position:static;}
+    .form-row{grid-template-columns:1fr;}
+  }
+  @media(max-width:768px){
+    .nav-links{display:none;}.hamburger{display:block;}
+    .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--black-2);border-bottom:1px solid var(--w15);z-index:99;padding:1rem 0;}
+    .nav-links.open a{line-height:48px;padding:0 2rem;}
+    .nav-links.open .nav-cta{margin:0 2rem;height:44px;line-height:44px!important;}
+  }
+</style>
 </head>
+<body>
 
-<body class="page-background">
-
-<!-- ================= NAVBAR ================= -->
-
-<nav class="navbar">
-
-    <div class="logo">
-        JS Beauty Parlour & Academy
-    </div>
-
-    <!-- MOBILE MENU BUTTON -->
-    <button class="menu-toggle"
-            onclick="toggleMenu()">
-        ☰
-    </button>
-
-    <ul id="navMenu" class="nav-menu">
-
-        <li><a href="../index.html">Home</a></li>
-
-        <li><a href="services.html">Services</a></li>
-
-        <li><a href="gallery.html">Gallery</a></li>
-
-        <li><a href="offers.html">Offers</a></li>
-
-        <li><a href="reviews.html">Reviews</a></li>
-
-        <li><a href="booking.html">Book</a></li>
-
-        <li><a href="contact.html">Contact</a></li>
-
-    </ul>
-
+<nav>
+  <a class="logo" href="index.html">JS <span>Beauty</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="gallery.html">Gallery</a></li>
+    <li><a href="offers.html">Offers</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="booking.html" class="active nav-cta">Book Now</a></li>
+  </ul>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- ================= BOOKING ================= -->
-
-<div class="booking-container">
-
-    <h1>Book Your Appointment</h1>
-
-    <p class="booking-subtitle">
-        Schedule your beauty session with
-        JS Beauty Parlour & Academy
-    </p>
-
-    <form id="bookingForm"
-          class="booking-form">
-
-        <input type="text"
-               id="name"
-               placeholder="Full Name"
-               required>
-
-        <input type="tel"
-               id="phone"
-               placeholder="Phone Number"
-               required>
-
-        <input type="email"
-               id="email"
-               placeholder="Email Address">
-
-        <select id="service" required>
-
-            <option value="">
-                Select Service
-            </option>
-
-            <option>Bridal Makeup</option>
-
-            <option>Hair Styling</option>
-
-            <option>Facial</option>
-
-            <option>Hair Spa</option>
-
-            <option>Mehendi</option>
-
-        </select>
-
-        <input type="date"
-               id="date"
-               required>
-
-        <input type="time"
-               id="time"
-               required>
-
-        <textarea id="message"
-                  placeholder="Additional Message">
-        </textarea>
-
-        <button type="submit">
-            Book Appointment
-        </button>
-
-    </form>
-
+<div class="page-banner">
+  <span class="pb-eye">Appointment</span>
+  <h1 class="pb-title">Book Your <em>Session</em></h1>
+  <p class="pb-sub">Schedule your beauty appointment in just a few steps</p>
 </div>
 
-<!-- ================= SUCCESS POPUP ================= -->
+<section class="section">
+  <div class="sec-inner">
+    <div class="booking-layout">
+      <div>
+        <div class="form-card" id="formCard">
+          <h2 class="form-title">Your Appointment Details</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input class="form-input" type="text" placeholder="Your name" id="bName">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input class="form-input" type="tel" placeholder="+91 00000 00000" id="bPhone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Select Service</label>
+            <select class="form-select" id="bService">
+              <option value="">— Choose a service —</option>
+              <option>Bridal Makeup – HD / Reception / Engagement</option>
+              <option>Hair Styling – Cut / Spa / Coloring</option>
+              <option>Facial & Skin Care</option>
+              <option>Hair Smoothing & Straightening</option>
+              <option>Mehendi</option>
+              <option>Gold Bridal Package (₹4,999)</option>
+              <option>Summer Hair Spa Combo (₹999)</option>
+              <option>Academy Training Enquiry</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Preferred Date</label>
+              <input class="form-input" type="date" id="bDate">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preferred Time</label>
+              <select class="form-select" id="bTime">
+                <option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+                <option>12:00 PM</option><option>2:00 PM</option><option>3:00 PM</option>
+                <option>4:00 PM</option><option>5:00 PM</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Additional Notes (Optional)</label>
+            <textarea class="form-textarea" placeholder="Tell us anything special about your appointment…" id="bNotes"></textarea>
+          </div>
+          <button class="form-submit" onclick="submitBooking()">Confirm Appointment →</button>
+        </div>
 
-<div id="successPopup"
-     class="success-popup">
+        <div class="booking-success" id="successCard">
+          <span class="s-icon">✓</span>
+          <h2 class="s-title">Appointment Requested!</h2>
+          <p class="s-text">Thank you for choosing JS Beauty Parlour & Academy. We will confirm your slot via WhatsApp or call shortly.</p>
+          <a href="https://wa.me/919025806588" target="_blank" class="wa-btn">💬 WhatsApp for Quick Confirmation</a>
+        </div>
+      </div>
 
-    <div class="popup-icon">
-        ✓
+      <div class="booking-sidebar">
+        <div class="info-card">
+          <div class="ic-title">Contact & Hours</div>
+          <div class="ic-item">
+            <span class="ic-icon">📞</span>
+            <div class="ic-label"><strong>+91 9025806588</strong>Call or WhatsApp to book</div>
+          </div>
+          <div class="ic-item">
+            <span class="ic-icon">⏰</span>
+            <div class="ic-label"><strong>Mon – Sat: 9 AM – 7 PM</strong>Sunday by appointment only</div>
+          </div>
+          <div class="ic-item">
+            <span class="ic-icon">📍</span>
+            <div class="ic-label"><strong>Chitteri, Vellore</strong>Tamil Nadu 632002</div>
+          </div>
+          <div class="ic-item">
+            <span class="ic-icon">✉</span>
+            <div class="ic-label"><strong>jsbeautyparlour@gmail.com</strong>Email for queries</div>
+          </div>
+        </div>
+        <div class="quick-card">
+          <div class="qc-label">Quick Book</div>
+          <p class="qc-text">For same-day or urgent appointments, message us directly on WhatsApp.</p>
+          <a href="https://wa.me/919025806588" target="_blank" class="wa-inline">💬 WhatsApp Now</a>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <h2>Appointment Booked!</h2>
-
-    <p>
-        Thank you for choosing
-        JS Beauty Parlour & Academy.
-    </p>
-
-</div>
-
-<!-- ================= SCRIPT ================= -->
+<footer>© 2025 JS Beauty Parlour & Academy · Chitteri, Vellore · <a href="tel:+919025806588">+91 9025806588</a></footer>
+<a class="wa-float" href="https://wa.me/919025806588" target="_blank">💬</a>
 
 <script>
+  const d = document.getElementById('bDate');
+  if(d) d.min = new Date().toISOString().split('T')[0];
 
-function toggleMenu() {
-
-    document
-    .getElementById("navMenu")
-    .classList
-    .toggle("show");
-
-}
-
-function showSuccessPopup() {
-
-    const popup =
-    document.getElementById("successPopup");
-
-    popup.classList.add("show");
-
-    setTimeout(() => {
-
-        popup.classList.remove("show");
-
-    }, 7000);
-
-}
-
-document
-.getElementById("bookingForm")
-
-.addEventListener("submit",
-
-async function (e) {
-
-    e.preventDefault();
-
-    const booking = {
-
-        name:
-        document.getElementById("name").value,
-
-        phone:
-        document.getElementById("phone").value,
-
-        service:
-        document.getElementById("service").value,
-
-        date:
-        document.getElementById("date").value,
-
-        time:
-        document.getElementById("time").value
-
-    };
-
-    try {
-
-        const response =
-        await fetch(
-
-            "http://127.0.0.1:8000/book",
-
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type":
-                    "application/json"
-                },
-
-                body: JSON.stringify(booking)
-            }
-
-        );
-
-        if (response.ok) {
-
-            showSuccessPopup();
-
-            document
-            .getElementById("bookingForm")
-            .reset();
-
-        }
-
+  function submitBooking() {
+    const name = document.getElementById('bName').value.trim();
+    const phone = document.getElementById('bPhone').value.trim();
+    const service = document.getElementById('bService').value;
+    if(!name || !phone || !service){
+      alert('Please fill in your name, phone number, and select a service.');
+      return;
     }
-
-    catch (error) {
-
-        console.error(error);
-
-    }
-
-});
-
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('successCard').style.display = 'block';
+    document.getElementById('successCard').scrollIntoView({behavior:'smooth'});
+  }
 </script>
-
 </body>
 </html>
