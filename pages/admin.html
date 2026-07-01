@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owner Dashboard — JS Beauty Parlour & Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--black: #F6F2EC;--black-2: #FAF7F2;--black-3: #FFFFFF;--black-4: #FFFFFF;--rg: #A85A28;--rg-light: #7D4319;--white: #1D160F;--w70: rgba(29,22,15,0.72);--w40: rgba(29,22,15,0.45);--w15: rgba(29,22,15,0.08);--border: rgba(168,90,40,0.20);--green: #178A49;--yellow: #8A6D1D;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);min-height:100vh;}
+
+  /* LOGIN */
+  #loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem;}
+  .login-card{background:var(--black-3);border:1px solid var(--w15);border-radius:16px;padding:2.5rem;width:100%;max-width:360px;}
+  .login-card h1{font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:1.6rem;text-align:center;}
+  .login-card h1 span{color:var(--rg);}
+  .login-card input{width:100%;padding:11px 14px;margin-bottom:1rem;border:1px solid var(--w15);border-radius:8px;background:var(--black-4);color:var(--white);font-size:.9rem;}
+  .login-card button{width:100%;background:var(--rg);color:var(--black);border:none;padding:12px;border-radius:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;cursor:pointer;}
+  .login-err{color:#C23B3B;font-size:.78rem;text-align:center;margin-top:.6rem;display:none;}
+
+  /* DASHBOARD */
+  #dash{display:none;max-width:1100px;margin:0 auto;padding:2rem 1.2rem 4rem;}
+  .dash-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.6rem;flex-wrap:wrap;gap:1rem;}
+  .dash-head h1{font-family:'Playfair Display',serif;font-size:1.7rem;}
+  .dash-head h1 span{color:var(--rg);}
+  .logout-btn{background:transparent;border:1px solid var(--w15);color:var(--w70);padding:8px 16px;border-radius:6px;font-size:.78rem;cursor:pointer;}
+
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+  .stat-card{background:var(--black-3);border:1px solid var(--w15);border-radius:12px;padding:1.2rem;text-align:center;}
+  .stat-num{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--rg);}
+  .stat-lbl{font-size:.7rem;color:var(--w40);text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem;}
+
+  .filter-row{display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;}
+  .filter-btn{background:var(--black-3);border:1px solid var(--w15);color:var(--w70);padding:7px 16px;border-radius:20px;font-size:.78rem;cursor:pointer;}
+  .filter-btn.active{background:var(--rg);color:var(--black);border-color:var(--rg);font-weight:600;}
+
+  .appt-card{background:var(--black-3);border:1px solid var(--w15);border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:.9rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
+  .appt-info{flex:1;min-width:200px;}
+  .appt-name{font-weight:600;font-size:1rem;}
+  .appt-meta{font-size:.8rem;color:var(--w40);margin-top:2px;line-height:1.5;}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-left:8px;}
+  .badge.Pending{background:rgba(232,201,124,.15);color:var(--yellow);}
+  .badge.Confirmed{background:rgba(168,90,40,.15);color:var(--rg);}
+  .badge.Done{background:rgba(37,211,102,.15);color:var(--green);}
+
+  .appt-actions{display:flex;gap:.6rem;flex-wrap:wrap;}
+  .act-btn{border:none;padding:9px 14px;border-radius:7px;font-size:.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;}
+  .act-confirm{background:var(--green);color:#fff;}
+  .act-done{background:var(--rg);color:var(--black);}
+  .act-reset{background:transparent;border:1px solid var(--w15);color:var(--w70);}
+  .act-delete{background:transparent;border:1px solid rgba(255,80,80,.3);color:#C23B3B;}
+
+  .empty-state{text-align:center;padding:3rem;color:var(--w40);font-size:.9rem;}
+  .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--rg);color:var(--black);padding:10px 20px;border-radius:8px;font-size:.82rem;font-weight:600;display:none;z-index:300;}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>JS Beauty <span>Owner Login</span></h1>
+    <input type="text" id="loginUser" placeholder="Username">
+    <input type="password" id="loginPass" placeholder="Password">
+    <button onclick="doLogin()">Log In</button>
+    <div class="login-err" id="loginErr">Invalid username or password.</div>
+  </div>
+</div>
+
+<div id="dash">
+  <div class="dash-head">
+    <h1>Appointment <span>Dashboard</span></h1>
+    <button class="logout-btn" onclick="logout()">Log Out</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">Total</div></div>
+    <div class="stat-card"><div class="stat-num" id="statPending">0</div><div class="stat-lbl">Pending</div></div>
+    <div class="stat-card"><div class="stat-num" id="statConfirmed">0</div><div class="stat-lbl">Confirmed</div></div>
+    <div class="stat-card"><div class="stat-num" id="statDone">0</div><div class="stat-lbl">Done</div></div>
+  </div>
+
+  <div class="filter-row" id="filterRow">
+    <button class="filter-btn active" data-f="All" onclick="setFilter('All')">All</button>
+    <button class="filter-btn" data-f="Pending" onclick="setFilter('Pending')">Pending</button>
+    <button class="filter-btn" data-f="Confirmed" onclick="setFilter('Confirmed')">Confirmed</button>
+    <button class="filter-btn" data-f="Done" onclick="setFilter('Done')">Done</button>
+  </div>
+
+  <div id="apptList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // Point this at wherever your FastAPI backend is running
+  const API_BASE = "http://127.0.0.1:8000";
+
+  let appointments = [];
+  let currentFilter = "All";
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(()=> t.style.display='none', 2500);
+  }
+
+  async function doLogin(){
+    const username = document.getElementById('loginUser').value.trim();
+    const password = document.getElementById('loginPass').value.trim();
+    try{
+      const res = await fetch(`${API_BASE}/login`, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({username, password})
+      });
+      if(!res.ok) throw new Error();
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('dash').style.display='block';
+      sessionStorage.setItem('jsb_admin','1');
+      loadAppointments();
+    }catch(e){
+      document.getElementById('loginErr').style.display='block';
+    }
+  }
+
+  function logout(){
+    sessionStorage.removeItem('jsb_admin');
+    document.getElementById('dash').style.display='none';
+    document.getElementById('loginScreen').style.display='flex';
+  }
+
+  function setFilter(f){
+    currentFilter = f;
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active', b.dataset.f===f));
+    renderList();
+  }
+
+  async function loadAppointments(){
+    try{
+      const [apptRes, statsRes] = await Promise.all([
+        fetch(`${API_BASE}/appointments`),
+        fetch(`${API_BASE}/appointments/stats`)
+      ]);
+      appointments = await apptRes.json();
+      const stats = await statsRes.json();
+      document.getElementById('statTotal').textContent = stats.total;
+      document.getElementById('statPending').textContent = stats.pending;
+      document.getElementById('statConfirmed').textContent = stats.confirmed ?? 0;
+      document.getElementById('statDone').textContent = stats.done;
+      renderList();
+    }catch(e){
+      document.getElementById('apptList').innerHTML =
+        `<div class="empty-state">Could not reach the backend at ${API_BASE}.<br>Make sure the FastAPI server is running.</div>`;
+    }
+  }
+
+  function renderList(){
+    const list = document.getElementById('apptList');
+    const data = currentFilter==='All' ? appointments : appointments.filter(a=>a.status===currentFilter);
+
+    if(data.length===0){
+      list.innerHTML = `<div class="empty-state">No ${currentFilter==='All'?'':currentFilter.toLowerCase()} appointments.</div>`;
+      return;
+    }
+
+    list.innerHTML = data.map(a => `
+      <div class="appt-card">
+        <div class="appt-info">
+          <span class="appt-name">${a.name}<span class="badge ${a.status}">${a.status}</span></span>
+          <div class="appt-meta">${a.service}</div>
+          <div class="appt-meta">📅 ${a.date} · 🕐 ${a.time} · 📞 ${a.phone}</div>
+        </div>
+        <div class="appt-actions">
+          ${a.status==='Pending' ? `<button class="act-btn act-confirm" onclick="confirmAppt(${a.id})">💬 Confirm via WhatsApp</button>` : ''}
+          ${a.status==='Confirmed' ? `<button class="act-btn act-done" onclick="completeAppt(${a.id})">✓ Mark Done & Notify</button>` : ''}
+          ${a.status!=='Pending' ? `<button class="act-btn act-reset" onclick="resetAppt(${a.id})">↺ Reset</button>` : ''}
+          <button class="act-btn act-delete" onclick="deleteAppt(${a.id})">🗑 Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function confirmAppt(id){
+    const res = await fetch(`${API_BASE}/appointment/${id}/confirm`, {method:'PUT'});
+    const data = await res.json();
+    if(data.whatsapp_link) window.open(data.whatsapp_link, '_blank');
+    showToast('Marked Confirmed — send the WhatsApp message that just opened.');
+    loadAppointments();
+  }
+
+  async function completeAppt(id){
+    const res = await fetch(`${API_BASE}/appointment/${id}/complete`, {method:'PUT'});
+    const data = await res.json();
+    if(data.whatsapp_link) window.open(data.whatsapp_link, '_blank');
+    showToast('Marked Done — send the thank-you WhatsApp message that just opened.');
+    loadAppointments();
+  }
+
+  async function resetAppt(id){
+    await fetch(`${API_BASE}/appointment/${id}/reset`, {method:'PUT'});
+    showToast('Reset to Pending.');
+    loadAppointments();
+  }
+
+  async function deleteAppt(id){
+    if(!confirm('Delete this appointment?')) return;
+    await fetch(`${API_BASE}/appointment/${id}`, {method:'DELETE'});
+    showToast('Appointment deleted.');
+    loadAppointments();
+  }
+
+  // auto-login if session already active
+  if(sessionStorage.getItem('jsb_admin')==='1'){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dash').style.display='block';
+    loadAppointments();
+  }
+</script>
+</body>
+</html>

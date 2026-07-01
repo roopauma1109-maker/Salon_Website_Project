@@ -8,10 +8,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--black:#0A0A0A;--black-2:#111111;--black-3:#1A1A1A;--black-4:#242424;--rg:#E8A87C;--rg-light:#F5CBA7;--rg-deep:#C07840;--rg-muted:rgba(232,168,124,0.10);--rg-border:rgba(232,168,124,0.25);--white:#FFFFFF;--w70:rgba(255,255,255,0.70);--w40:rgba(255,255,255,0.40);--w15:rgba(255,255,255,0.08);--border:rgba(232,168,124,0.20);}
+  :root{--black: #F6F2EC;--black-2: #FAF7F2;--black-3: #FFFFFF;--black-4: #FFFFFF;--rg: #A85A28;--rg-light: #7D4319;--rg-deep: #5C3110;--rg-muted: rgba(168,90,40,0.08);--rg-border: rgba(168,90,40,0.22);--white: #1D160F;--w70: rgba(29,22,15,0.72);--w40: rgba(29,22,15,0.45);--w15: rgba(29,22,15,0.08);--border: rgba(168,90,40,0.20);}
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
-  nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--w15);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--w15);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
   .logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);text-decoration:none;}
   .logo span{color:var(--rg);}
   .nav-links{display:flex;list-style:none;}
@@ -22,7 +22,7 @@
   .hamburger span{display:block;width:22px;height:1.5px;background:var(--white);margin:5px 0;}
 
   .page-banner{background:var(--black-2);border-bottom:1px solid var(--border);padding:4.5rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden;}
-  .page-banner::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(232,168,124,0.06) 0%,transparent 70%);}
+  .page-banner::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(168,90,40,0.05) 0%,transparent 70%);}
   .pb-eye{font-size:.68rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--rg);display:block;margin-bottom:.6rem;position:relative;}
   .pb-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.4rem);font-weight:700;color:var(--white);position:relative;}
   .pb-title em{font-style:italic;color:var(--rg);}
@@ -45,7 +45,7 @@
     background:var(--black-4);transition:border-color .2s;outline:none;
     -webkit-appearance:none;
   }
-  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--border);box-shadow:0 0 0 3px rgba(232,168,124,0.06);}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--border);box-shadow:0 0 0 3px rgba(168,90,40,0.05);}
   .form-select option{background:var(--black-4);}
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
   .form-textarea{resize:vertical;min-height:90px;}
@@ -181,7 +181,8 @@
             <label class="form-label">Additional Notes (Optional)</label>
             <textarea class="form-textarea" placeholder="Tell us anything special about your appointment…" id="bNotes"></textarea>
           </div>
-          <button class="form-submit" onclick="submitBooking()">Confirm Appointment →</button>
+          <button class="form-submit" id="submitBtn" onclick="submitBooking()">Confirm Appointment →</button>
+          <p class="s-text" id="bookingErr" style="display:none;color:#C23B3B;margin-top:.8rem;text-align:center;"></p>
         </div>
 
         <div class="booking-success" id="successCard">
@@ -226,20 +227,50 @@
 <a class="wa-float" href="https://wa.me/919025806588" target="_blank">💬</a>
 
 <script>
+  // Point this at wherever your FastAPI backend is running.
+  // Local testing: http://127.0.0.1:8000
+  // Once you deploy the backend online, change this to that URL.
+  const API_BASE = "http://127.0.0.1:8000";
+
   const d = document.getElementById('bDate');
   if(d) d.min = new Date().toISOString().split('T')[0];
 
-  function submitBooking() {
+  async function submitBooking() {
     const name = document.getElementById('bName').value.trim();
     const phone = document.getElementById('bPhone').value.trim();
     const service = document.getElementById('bService').value;
+    const date = document.getElementById('bDate').value;
+    const time = document.getElementById('bTime').value;
+    const errBox = document.getElementById('bookingErr');
+    errBox.style.display = 'none';
+
     if(!name || !phone || !service){
       alert('Please fill in your name, phone number, and select a service.');
       return;
     }
-    document.getElementById('formCard').style.display = 'none';
-    document.getElementById('successCard').style.display = 'block';
-    document.getElementById('successCard').scrollIntoView({behavior:'smooth'});
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Booking…';
+
+    try {
+      const res = await fetch(`${API_BASE}/book`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, service, date, time })
+      });
+
+      if(!res.ok) throw new Error('Booking failed');
+
+      document.getElementById('formCard').style.display = 'none';
+      document.getElementById('successCard').style.display = 'block';
+      document.getElementById('successCard').scrollIntoView({behavior:'smooth'});
+    } catch (e) {
+      errBox.textContent = "Couldn't reach the booking server. Please try again, or WhatsApp us directly.";
+      errBox.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Confirm Appointment →';
+    }
   }
 </script>
 </body>

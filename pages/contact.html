@@ -8,10 +8,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--black:#0A0A0A;--black-2:#111111;--black-3:#1A1A1A;--black-4:#242424;--rg:#E8A87C;--rg-light:#F5CBA7;--rg-deep:#C07840;--rg-muted:rgba(232,168,124,0.10);--rg-border:rgba(232,168,124,0.25);--white:#FFFFFF;--w70:rgba(255,255,255,0.70);--w40:rgba(255,255,255,0.40);--w15:rgba(255,255,255,0.08);--border:rgba(232,168,124,0.20);}
+  :root{--black: #F6F2EC;--black-2: #FAF7F2;--black-3: #FFFFFF;--black-4: #FFFFFF;--rg: #A85A28;--rg-light: #7D4319;--rg-deep: #5C3110;--rg-muted: rgba(168,90,40,0.08);--rg-border: rgba(168,90,40,0.22);--white: #1D160F;--w70: rgba(29,22,15,0.72);--w40: rgba(29,22,15,0.45);--w15: rgba(29,22,15,0.08);--border: rgba(168,90,40,0.20);}
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
-  nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--w15);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--w15);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
   .logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--white);text-decoration:none;}
   .logo span{color:var(--rg);}
   .nav-links{display:flex;list-style:none;}
@@ -22,7 +22,7 @@
   .hamburger span{display:block;width:22px;height:1.5px;background:var(--white);margin:5px 0;}
 
   .page-banner{background:var(--black-2);border-bottom:1px solid var(--border);padding:4.5rem 2rem 3.5rem;text-align:center;position:relative;overflow:hidden;}
-  .page-banner::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(232,168,124,0.06) 0%,transparent 70%);}
+  .page-banner::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;border-radius:50%;background:radial-gradient(ellipse,rgba(168,90,40,0.05) 0%,transparent 70%);}
   .pb-eye{font-size:.68rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--rg);display:block;margin-bottom:.6rem;position:relative;}
   .pb-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.4rem);font-weight:700;color:var(--white);position:relative;}
   .pb-title em{font-style:italic;color:var(--rg);}
@@ -54,7 +54,7 @@
 
   /* MAP SIDE */
   .map-wrap{border-radius:16px;overflow:hidden;border:1px solid var(--w15);height:360px;background:var(--black-3);}
-  .map-wrap iframe{width:100%;height:100%;border:none;display:block;filter:grayscale(30%) invert(5%);}
+  .map-wrap iframe{width:100%;height:100%;border:none;display:block;filter:grayscale(15%);}
 
   .book-cta{background:var(--rg-muted);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:1.5rem;}
   .bc-lbl{font-size:.68rem;font-weight:600;color:var(--rg);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem;}
